@@ -129,7 +129,7 @@ public class Artista implements Serializable {
     public void setIdClienteForDiscos(Integer idCliente) {
         if (discoCollection != null) {
             for (Disco disco : discoCollection) {
-                disco.setCodArtista(idCliente);;;
+                disco.setCodArtista(idCliente);
             }
         }
     }
