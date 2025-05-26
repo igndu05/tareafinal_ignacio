@@ -157,17 +157,21 @@ public class Usuario implements Serializable {
     }
 
     
-    
-    // FALTA SET ID CLIENTE DE LA CLASE DISCO
+    public void setIdClienteForDiscos(Integer idCliente) {
+        if (discoCollection != null) {
+            for (Disco disco : discoCollection) {
+                disco.setCodArtista(idCliente);;;
+            }
+        }
+    }
 
     
     @Override
     public String toString() {
         String tmp = "";
-        // CORREGIR TO STRING, FALTA CREAR LA CLASE DISCO
-        // for (Venta venta : ventaCollection) {
-        //     tmp+=venta+"\n";
-        // }
+        for (Disco disco : discoCollection) {
+            tmp+=disco+"\n";
+        }
         return "Usuario{" + "codUsuario=" + codUsuario + ", nombreUsuario=" + nombreUsuario + ", dniUsuario=" + dniUsuario + ", localidadUsuario=" + localidadUsuario + ", telefUsuario=" + telefUsuario + ", discoCollection=" + discoCollection + '}';
     }
 

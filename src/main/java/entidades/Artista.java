@@ -26,8 +26,7 @@ import javax.persistence.TemporalType;
 @NamedQueries({
     @NamedQuery(name = "Artista.findAll", query = "SELECT a FROM Artistas a"),
     @NamedQuery(name = "Artista.findById", query = "SELECT a FROM Artistas a WHERE a.id = :id"),
-    @NamedQuery(name = "Artista.findByNombre", query = "SELECT a FROM Artistas a WHERE a.nombre = :nombre"),
-    @NamedQuery(name = "Artista.findByNif", query = "SELECT a FROM Artistas a WHERE a.nif = :nif")})
+    @NamedQuery(name = "Artista.findByNombre", query = "SELECT a FROM Artistas a WHERE a.nombre = :nombre")})
 public class Artista implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -127,17 +126,24 @@ public class Artista implements Serializable {
         return Objects.equals(this.discoCollection, other.discoCollection);
     }
     
-    // FALTA SET ID CLIENTE DE LA CLASE DISCO
-    
+    public void setIdClienteForDiscos(Integer idCliente) {
+        if (discoCollection != null) {
+            for (Disco disco : discoCollection) {
+                disco.setCodArtista(idCliente);;;
+            }
+        }
+    }
+
     @Override
     public String toString() {
         String tmp = "";
-        // CORREGIR TO STRING, FALTA CREAR LA CLASE DISCO
-        // for (Venta venta : ventaCollection) {
-        //     tmp+=venta+"\n";
-        // }
+        for (Disco disco : discoCollection) {
+            tmp+=disco+"\n";
+        }
         return "Artista{" + "codArtista=" + codArtista + ", nomArtista=" + nomArtista + ", fechaNacimientoArtista=" + fechaNacimientoArtista + ", discoCollection=" + discoCollection + '}';
     }
+
+    
     
     
     
