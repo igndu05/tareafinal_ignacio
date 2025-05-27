@@ -13,14 +13,14 @@ public class UsuarioController {
     private final EntityManagerFactory emf;
 
     public UsuarioController() {
-        this.emf = Persistence.createEntityManagerFactory("usuarios");
+        this.emf = Persistence.createEntityManagerFactory("compra_discos");
     }
 
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
-    private void create(Usuario usuario) {
+    public void create(Usuario usuario) {
         EntityManager em = getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Basic;
@@ -39,8 +40,8 @@ public class Artista implements Serializable {
     private String nomArtista;
     @Basic(optional = false)
     @Column(name = "fechaNacimientoArtista")
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDate fechaNacimientoArtista;
+    @Temporal(TemporalType.DATE)
+    private Date fechaNacimientoArtista;
     
 
     @OneToMany(mappedBy = "artistas", cascade = CascadeType.PERSIST)
@@ -53,7 +54,7 @@ public class Artista implements Serializable {
         this.codArtista = codArtista;
     }
 
-    public Artista(Integer codArtista, String nomArtista, LocalDate fechaNacimientoArtista, Collection<Disco> discoCollection) {
+    public Artista(Integer codArtista, String nomArtista, Date fechaNacimientoArtista, Collection<Disco> discoCollection) {
         this.codArtista = codArtista;
         this.nomArtista = nomArtista;
         this.fechaNacimientoArtista = fechaNacimientoArtista;
@@ -76,11 +77,11 @@ public class Artista implements Serializable {
         this.nomArtista = nomArtista;
     }
 
-    public LocalDate getFechaNacimientoArtista() {
+    public Date getFechaNacimientoArtista() {
         return fechaNacimientoArtista;
     }
 
-    public void setFechaNacimientoArtista(LocalDate fechaNacimientoArtista) {
+    public void setFechaNacimientoArtista(Date fechaNacimientoArtista) {
         this.fechaNacimientoArtista = fechaNacimientoArtista;
     }
 

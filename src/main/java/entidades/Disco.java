@@ -38,11 +38,11 @@ public class Disco implements Serializable{
 
     @JoinColumn(name = "codArtista", referencedColumnName = "codArtista")
     @ManyToOne
-    private Integer codArtista;
+    private Artista artista;
 
     @JoinColumn(name = "codUsuario", referencedColumnName = "codUsuario")
     @ManyToOne
-    private Integer codUsuario;
+    private Usuario usuario;
 
     public Disco() {
     }
@@ -51,14 +51,14 @@ public class Disco implements Serializable{
         this.codDisco = codDisco;
     }
 
-    public Disco(Integer codDisco, String nomDisco, LocalDate fechaLanzamiento, int cantidadDiscos, Integer codArtista,
-    Integer codUsuario) {
+    public Disco(Integer codDisco, String nomDisco, LocalDate fechaLanzamiento, int cantidadDiscos, Artista artista,
+    Usuario usuario) {
         this.codDisco = codDisco;
         this.nomDisco = nomDisco;
         this.fechaLanzamiento = fechaLanzamiento;
         this.cantidadDiscos = cantidadDiscos;
-        this.codArtista = codArtista;
-        this.codUsuario = codUsuario;
+        this.artista = artista;
+        this.usuario = usuario;
     }
 
     public Integer getCodDisco() {
@@ -93,20 +93,20 @@ public class Disco implements Serializable{
         this.cantidadDiscos = cantidadDiscos;
     }
 
-    public Integer getCodArtista() {
-        return codArtista;
+    public Integer getArtista() {
+        return artista;
     }
 
-    public void setCodArtista(Integer codArtista) {
-        this.codArtista = codArtista;
+    public void setArtista(Artista artista) {
+        this.artista = artista;
     }
 
-    public Integer getCodUsuario() {
-        return codUsuario;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setCodUsuario(Integer codUsuario) {
-        this.codUsuario = codUsuario;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override
@@ -117,8 +117,8 @@ public class Disco implements Serializable{
         result = prime * result + ((nomDisco == null) ? 0 : nomDisco.hashCode());
         result = prime * result + ((fechaLanzamiento == null) ? 0 : fechaLanzamiento.hashCode());
         result = prime * result + cantidadDiscos;
-        result = prime * result + ((codArtista == null) ? 0 : codArtista.hashCode());
-        result = prime * result + ((codUsuario == null) ? 0 : codUsuario.hashCode());
+        result = prime * result + ((artista == null) ? 0 : artista.hashCode());
+        result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
         return result;
     }
 
@@ -153,17 +153,17 @@ public class Disco implements Serializable{
                 return false;
         } else if (!codArtista.equals(other.codArtista))
             return false;
-        if (codUsuario == null) {
-            if (other.codUsuario != null)
+        if (usuario == null) {
+            if (other.usuario != null)
                 return false;
-        } else if (!codUsuario.equals(other.codUsuario))
+        } else if (!usuario.equals(other.usuario))
             return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "Disco{" + "codDisco=" + codDisco + ", nomDisco=" + nomDisco + ", fechaLanzamiento=" + fechaLanzamiento + ", cantidadDiscos=" + cantidadDiscos + ", codArtista=" + codArtista + ", codUsuario=" + codUsuario + '}';
+        return "Disco{" + "codDisco=" + codDisco + ", nomDisco=" + nomDisco + ", fechaLanzamiento=" + fechaLanzamiento + ", cantidadDiscos=" + cantidadDiscos + ", codArtista=" + codArtista + ", Usuario=" + usuario + '}';
     }
     
     

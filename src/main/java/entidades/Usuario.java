@@ -20,10 +20,10 @@ import javax.persistence.Table;
 @Table(name = "usuarios")
 
 @NamedQueries({
-    @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuarios u"),
-    @NamedQuery(name = "Usuario.findById", query = "SELECT u FROM Usuarios u WHERE u.id = :id"),
-    @NamedQuery(name = "Usuario.findByNombre", query = "SELECT u FROM Usuarios u WHERE u.nombre = :nombre"),
-    @NamedQuery(name = "Usuario.findByNif", query = "SELECT u FROM Usuarios u WHERE u.nif = :nif")})
+    @NamedQuery(name = "usuarios.findAll", query = "SELECT u FROM usuarios u"),
+    @NamedQuery(name = "usuarios.findById", query = "SELECT u FROM usuarios u WHERE u.codUsuario = :codUsuario"),
+    @NamedQuery(name = "usuarios.findByNombre", query = "SELECT u FROM usuarios u WHERE u.nomUsuario = :nomUsuario")
+    })
 public class Usuario implements Serializable {
     
     private static final long serialVersionUID = 1L;

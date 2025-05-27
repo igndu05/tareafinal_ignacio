@@ -1,9 +1,29 @@
 package daw;
 
+import controladores.UsuarioController;
+import servicios.ServicioUsuario;
+
 public class Main {
+    private static final UsuarioController uc = new UsuarioController();
+    
     public static void main(String[] args) {
-        System.out.println("Hello world!");
-        //comentario de 
-        //prueba
+        prepararBaseDatos();
+        System.out.println("Clientes en la base de datos ----------- ");
+        ServicioUsuario.mostrarTodosUsuarios();
+    }
+    
+    private static void borrarTodo() {
+
+        ServicioUsuario.borrarTodosUsuarios();
+        
+        System.out
+                .println("Se han borrado todos los usuarios del sistema e inicializado las claves primarias de todas las tablas");
+    }
+
+    // Se borra todo, reinicia pk e inserta datos de ejemplo
+    // de productos y clientes
+    private static void prepararBaseDatos() {
+        borrarTodo();
+        ServicioUsuario.insertarUsuariosEjemplo();
     }
 }
