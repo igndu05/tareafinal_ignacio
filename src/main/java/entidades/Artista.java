@@ -1,12 +1,10 @@
 package entidades;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
-
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -25,9 +23,9 @@ import javax.persistence.TemporalType;
 @Table(name = "artistas")
 
 @NamedQueries({
-    @NamedQuery(name = "Artista.findAll", query = "SELECT a FROM Artistas a"),
-    @NamedQuery(name = "Artista.findById", query = "SELECT a FROM Artistas a WHERE a.id = :id"),
-    @NamedQuery(name = "Artista.findByNombre", query = "SELECT a FROM Artistas a WHERE a.nombre = :nombre")})
+    @NamedQuery(name = "Artista.findAll", query = "SELECT a FROM Artista a"),
+    @NamedQuery(name = "Artista.findById", query = "SELECT a FROM Artista a WHERE a.codArtista = :codArtista"),
+    @NamedQuery(name = "Artista.findByNombre", query = "SELECT a FROM Artista a WHERE a.nomArtista = :nomArtista")})
 public class Artista implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,7 +42,7 @@ public class Artista implements Serializable {
     private Date fechaNacimientoArtista;
     
 
-    @OneToMany(mappedBy = "artistas", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "artista", cascade = CascadeType.PERSIST)
     private Collection<Disco> discoCollection;
 
     public Artista() {
@@ -127,10 +125,10 @@ public class Artista implements Serializable {
         return Objects.equals(this.discoCollection, other.discoCollection);
     }
     
-    public void setIdClienteForDiscos(Integer idCliente) {
+    public void setArtistaForDisco(Artista artista) {
         if (discoCollection != null) {
             for (Disco disco : discoCollection) {
-                disco.setCodArtista(idCliente);
+                disco.setArtista(artista);
             }
         }
     }

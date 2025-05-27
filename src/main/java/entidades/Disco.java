@@ -1,7 +1,7 @@
 package entidades;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,9 +18,9 @@ import javax.persistence.Table;
 @Table(name = "discos")
 
 @NamedQueries({
-    @NamedQuery(name = "Discos.findAll", query = "SELECT d FROM discos d"),
-    @NamedQuery(name = "Discos.findById", query = "SELECT d FROM discos d WHERE a.codDisco = :codDisco"),
-    @NamedQuery(name = "Discos.findByNombre", query = "SELECT d FROM discos d WHERE a.nomDisco = :nomDisco")})
+    @NamedQuery(name = "Disco.findAll", query = "SELECT d FROM Disco d"),
+    @NamedQuery(name = "Disco.findById", query = "SELECT d FROM Disco d WHERE d.codDisco = :codDisco"),
+    @NamedQuery(name = "Disco.findByNombre", query = "SELECT d FROM Disco d WHERE d.nomDisco = :nomDisco")})
 public class Disco implements Serializable{
     
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,7 @@ public class Disco implements Serializable{
     @Column(name = "nomDisco")
     private String nomDisco;
     @Column(name = "fechaLanzamiento")
-    private LocalDate fechaLanzamiento;
+    private Date fechaLanzamiento;
     @Column(name = "cantidadDiscos")
     private int cantidadDiscos;
 
@@ -51,7 +51,7 @@ public class Disco implements Serializable{
         this.codDisco = codDisco;
     }
 
-    public Disco(Integer codDisco, String nomDisco, LocalDate fechaLanzamiento, int cantidadDiscos, Artista artista,
+    public Disco(Integer codDisco, String nomDisco, Date fechaLanzamiento, int cantidadDiscos, Artista artista,
     Usuario usuario) {
         this.codDisco = codDisco;
         this.nomDisco = nomDisco;
@@ -77,11 +77,11 @@ public class Disco implements Serializable{
         this.nomDisco = nomDisco;
     }
 
-    public LocalDate getFechaLanzamiento() {
+    public Date getFechaLanzamiento() {
         return fechaLanzamiento;
     }
 
-    public void setFechaLanzamiento(LocalDate fechaLanzamiento) {
+    public void setFechaLanzamiento(Date fechaLanzamiento) {
         this.fechaLanzamiento = fechaLanzamiento;
     }
 
@@ -93,7 +93,7 @@ public class Disco implements Serializable{
         this.cantidadDiscos = cantidadDiscos;
     }
 
-    public Integer getArtista() {
+    public Artista getArtista() {
         return artista;
     }
 
@@ -148,10 +148,10 @@ public class Disco implements Serializable{
             return false;
         if (cantidadDiscos != other.cantidadDiscos)
             return false;
-        if (codArtista == null) {
-            if (other.codArtista != null)
+        if (artista == null) {
+            if (other.artista != null)
                 return false;
-        } else if (!codArtista.equals(other.codArtista))
+        } else if (!artista.equals(other.artista))
             return false;
         if (usuario == null) {
             if (other.usuario != null)
@@ -163,7 +163,7 @@ public class Disco implements Serializable{
 
     @Override
     public String toString() {
-        return "Disco{" + "codDisco=" + codDisco + ", nomDisco=" + nomDisco + ", fechaLanzamiento=" + fechaLanzamiento + ", cantidadDiscos=" + cantidadDiscos + ", codArtista=" + codArtista + ", Usuario=" + usuario + '}';
+        return "Disco{" + "codDisco=" + codDisco + ", nomDisco=" + nomDisco + ", fechaLanzamiento=" + fechaLanzamiento + ", cantidadDiscos=" + cantidadDiscos + ", Artista=" + artista.getNomArtista() + ", Usuario=" + usuario.getNombreUsuario()+ '}';
     }
     
     

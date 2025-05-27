@@ -8,7 +8,6 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 import entidades.Disco;
-import entidades.Usuario;
 
 public class DiscoController {
     private final EntityManagerFactory emf;
@@ -103,7 +102,7 @@ public class DiscoController {
             // Una native query es una consulta SQL que se ejecuta directamente en la base de datos
             // sin pasar por el mapeo de entidades de JPA
             em.createNativeQuery("delete from discos").executeUpdate();
-            em.createNativeQuery("alter table venta_discos.discos AUTO_INCREMENT = 1").executeUpdate();
+            em.createNativeQuery("alter table compra_discos.discos AUTO_INCREMENT = 1").executeUpdate();
             tx.commit();
         } catch (Exception ex) {
             if (tx.isActive()) {

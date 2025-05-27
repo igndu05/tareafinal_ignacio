@@ -15,6 +15,7 @@ public class Seleccion extends javax.swing.JFrame {
      */
     public Seleccion() {
         initComponents();
+        setResizable(false);
     }
 
     /**
@@ -26,24 +27,69 @@ public class Seleccion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        Artistas = new javax.swing.JButton();
+        Usuarios = new javax.swing.JButton();
+        Discos = new javax.swing.JButton();
+        VolverMenuPrincipal = new javax.swing.JButton();
+        textoSeleccion = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        Artistas.setBackground(new java.awt.Color(153, 153, 153));
+        Artistas.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
+        Artistas.setForeground(new java.awt.Color(0, 0, 0));
+        Artistas.setText("Artistas");
+        getContentPane().add(Artistas, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 180, 160, 90));
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 280, 300));
+        Usuarios.setBackground(new java.awt.Color(153, 153, 153));
+        Usuarios.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
+        Usuarios.setForeground(new java.awt.Color(0, 0, 0));
+        Usuarios.setText("Usuarios");
+        Usuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UsuariosActionPerformed(evt);
+            }
+        });
+        getContentPane().add(Usuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 180, 160, 90));
+
+        Discos.setBackground(new java.awt.Color(153, 153, 153));
+        Discos.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
+        Discos.setForeground(new java.awt.Color(0, 0, 0));
+        Discos.setText("Discos");
+        Discos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DiscosActionPerformed(evt);
+            }
+        });
+        getContentPane().add(Discos, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 180, 160, 90));
+
+        VolverMenuPrincipal.setBackground(new java.awt.Color(153, 153, 153));
+        VolverMenuPrincipal.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
+        VolverMenuPrincipal.setForeground(new java.awt.Color(0, 0, 0));
+        VolverMenuPrincipal.setText("Volver al menu principal");
+        getContentPane().add(VolverMenuPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 320, 320, 110));
+
+        textoSeleccion.setBackground(new java.awt.Color(255, 255, 255));
+        textoSeleccion.setFont(new java.awt.Font("URW Bookman", 0, 32)); // NOI18N
+        textoSeleccion.setForeground(new java.awt.Color(255, 255, 255));
+        textoSeleccion.setText("Seleccione qué desea consultar:");
+        getContentPane().add(textoSeleccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 60, 550, 100));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/FondoSeleccion.png"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 510));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, 890, 560));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void DiscosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DiscosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DiscosActionPerformed
+
+    private void UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UsuariosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_UsuariosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -81,8 +127,11 @@ public class Seleccion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Artistas;
+    private javax.swing.JButton Discos;
+    private javax.swing.JButton Usuarios;
+    private javax.swing.JButton VolverMenuPrincipal;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel textoSeleccion;
     // End of variables declaration//GEN-END:variables
 }

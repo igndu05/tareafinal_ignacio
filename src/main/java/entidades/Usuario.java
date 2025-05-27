@@ -20,9 +20,9 @@ import javax.persistence.Table;
 @Table(name = "usuarios")
 
 @NamedQueries({
-    @NamedQuery(name = "usuarios.findAll", query = "SELECT u FROM usuarios u"),
-    @NamedQuery(name = "usuarios.findById", query = "SELECT u FROM usuarios u WHERE u.codUsuario = :codUsuario"),
-    @NamedQuery(name = "usuarios.findByNombre", query = "SELECT u FROM usuarios u WHERE u.nomUsuario = :nomUsuario")
+    @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
+    @NamedQuery(name = "Usuario.findById", query = "SELECT u FROM Usuario u WHERE u.codUsuario = :codUsuario"),
+    @NamedQuery(name = "Usuario.findByNombre", query = "SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombreUsuario")
     })
 public class Usuario implements Serializable {
     
@@ -45,7 +45,7 @@ public class Usuario implements Serializable {
     private String telefUsuario;
     @Basic(optional = false)
 
-    @OneToMany(mappedBy = "usuarios", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.PERSIST)
     private Collection<Disco> discoCollection; 
 
     // Constructores
@@ -73,10 +73,10 @@ public class Usuario implements Serializable {
         this.codUsuario = codUsuario;
     }
 
-    public String getNombre() {
+    public String getNombreUsuario() {
         return nombreUsuario;
     }
-    public void setNombre(String nombre) {
+    public void setNombreUsuario(String nombre) {
         this.nombreUsuario = nombre;
     }
     public String getDniUsuario() {
@@ -157,10 +157,10 @@ public class Usuario implements Serializable {
     }
 
     
-    public void setIdClienteForDiscos(Integer idCliente) {
+    public void setUsuarioForDiscos(Usuario usuario) {
         if (discoCollection != null) {
             for (Disco disco : discoCollection) {
-                disco.setCodArtista(idCliente);;;
+                disco.setUsuario(usuario);
             }
         }
     }
