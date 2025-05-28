@@ -9,6 +9,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -52,6 +53,12 @@ public class Artista implements Serializable {
         this.codArtista = codArtista;
     }
 
+    public Artista(Integer codArtista, String nomArtista, Date fechaNacimientoArtista) {
+        this.codArtista = codArtista;
+        this.nomArtista = nomArtista;
+        this.fechaNacimientoArtista = fechaNacimientoArtista;
+    }
+    
     public Artista(Integer codArtista, String nomArtista, Date fechaNacimientoArtista, Collection<Disco> discoCollection) {
         this.codArtista = codArtista;
         this.nomArtista = nomArtista;
@@ -128,7 +135,7 @@ public class Artista implements Serializable {
     public void setArtistaForDisco(Artista artista) {
         if (discoCollection != null) {
             for (Disco disco : discoCollection) {
-                disco.setArtista(artista);
+                disco.setCodArtista(artista);
             }
         }
     }

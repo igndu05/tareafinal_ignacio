@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "discos")
@@ -32,6 +34,7 @@ public class Disco implements Serializable{
     @Column(name = "nomDisco")
     private String nomDisco;
     @Column(name = "fechaLanzamiento")
+    @Temporal(TemporalType.DATE)
     private Date fechaLanzamiento;
     @Column(name = "cantidadDiscos")
     private int cantidadDiscos;
@@ -93,19 +96,19 @@ public class Disco implements Serializable{
         this.cantidadDiscos = cantidadDiscos;
     }
 
-    public Artista getArtista() {
+    public Artista getCodArtista() {
         return artista;
     }
 
-    public void setArtista(Artista artista) {
+    public void setCodArtista(Artista artista) {
         this.artista = artista;
     }
 
-    public Usuario getUsuario() {
+    public Usuario getCodUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setCodUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
 
@@ -163,7 +166,7 @@ public class Disco implements Serializable{
 
     @Override
     public String toString() {
-        return "Disco{" + "codDisco=" + codDisco + ", nomDisco=" + nomDisco + ", fechaLanzamiento=" + fechaLanzamiento + ", cantidadDiscos=" + cantidadDiscos + ", Artista=" + artista.getNomArtista() + ", Usuario=" + usuario.getNombreUsuario()+ '}';
+        return "Disco{" + "codDisco=" + codDisco + ", nomDisco=" + nomDisco + ", fechaLanzamiento=" + fechaLanzamiento + ", cantidadDiscos=" + cantidadDiscos + ", codArtista=" + artista.getCodArtista() + ", codUsuario=" + usuario.getCodUsuario() + '}';
     }
     
     

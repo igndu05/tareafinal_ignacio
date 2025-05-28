@@ -12,7 +12,7 @@
     <properties>
       <property name="javax.persistence.jdbc.url" 
                 value="jdbc:mysql://localhost:3306/compra_discos?zeroDateTimeBehavior=CONVERT_TO_NULL&amp;serverTimezone=Europe/Madrid"/>
-      <property name="javax.persistence.jdbc.user" value="ignacio"/>
+      <property name="javax.persistence.jdbc.user" value="Ignacio"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.password" value="05050505i."/>
     </properties>

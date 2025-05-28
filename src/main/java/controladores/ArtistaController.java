@@ -20,7 +20,7 @@ public class ArtistaController {
         return emf.createEntityManager();
     }
 
-    private void create(Artista artista) {
+    public void create(Artista artista) {
         EntityManager em = getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

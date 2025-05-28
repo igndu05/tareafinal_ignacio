@@ -1,6 +1,7 @@
 package daw;
 
 import controladores.UsuarioController;
+import servicios.ServicioArtista;
 import servicios.ServicioUsuario;
 
 public class Main {
@@ -10,6 +11,7 @@ public class Main {
         prepararBaseDatos();
         System.out.println("Clientes en la base de datos ----------- ");
         ServicioUsuario.mostrarTodosUsuarios();
+        ServicioArtista.mostrarTodosArtistas();
     }
     
     private static void borrarTodo() {
@@ -18,6 +20,11 @@ public class Main {
         
         System.out
                 .println("Se han borrado todos los usuarios del sistema e inicializado las claves primarias de todas las tablas");
+        
+        ServicioArtista.borrarTodosArtistas();
+        
+        System.out
+                .println("Se han borrado todos los artistas del sistema e inicializado las claves primarias de todas las tablas");
     }
 
     // Se borra todo, reinicia pk e inserta datos de ejemplo
@@ -25,5 +32,6 @@ public class Main {
     private static void prepararBaseDatos() {
         borrarTodo();
         ServicioUsuario.insertarUsuariosEjemplo();
+        ServicioArtista.insertarArtistasEjemplo();
     }
 }

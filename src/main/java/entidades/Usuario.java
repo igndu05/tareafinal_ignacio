@@ -46,7 +46,7 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.PERSIST)
-    private Collection<Disco> discoCollection; 
+    private Collection<Disco> discoCollection;
 
     // Constructores
     public Usuario() {
@@ -160,7 +160,7 @@ public class Usuario implements Serializable {
     public void setUsuarioForDiscos(Usuario usuario) {
         if (discoCollection != null) {
             for (Disco disco : discoCollection) {
-                disco.setUsuario(usuario);
+                disco.setCodUsuario(usuario);
             }
         }
     }
