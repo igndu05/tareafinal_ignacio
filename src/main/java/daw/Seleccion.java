@@ -4,6 +4,8 @@
  */
 package daw;
 
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author ignacio
@@ -78,7 +80,7 @@ public class Seleccion extends javax.swing.JFrame {
         getContentPane().add(textoSeleccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 60, 550, 100));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/FondoSeleccion.png"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, 890, 560));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 880, 560));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
