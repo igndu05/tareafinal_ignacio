@@ -157,15 +157,6 @@ public class Usuario implements Serializable {
     }
 
     
-    public void setUsuarioForDiscos(Usuario usuario) {
-        if (discoCollection != null) {
-            for (Disco disco : discoCollection) {
-                disco.setCodUsuario(usuario);
-            }
-        }
-    }
-
-    
     @Override
     public String toString() {
         String tmp = "";

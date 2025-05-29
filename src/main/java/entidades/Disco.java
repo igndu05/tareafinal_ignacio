@@ -3,6 +3,7 @@ package entidades;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -59,19 +60,11 @@ public class Disco implements Serializable{
         this.codDisco = codDisco;
     }
 
-    public Disco(Integer codDisco, String nomDisco, Date fechaLanzamiento, int stock) {
-        this.codDisco = codDisco;
+    public Disco(String nomDisco, Date fechaLanzamiento, Artista artista) {
         this.nomDisco = nomDisco;
         this.fechaLanzamiento = fechaLanzamiento;
-        this.stock = stock;
-    }
-    
-    public Disco(Integer codDisco, String nomDisco, Date fechaLanzamiento, int stock, Artista artista) {
-        this.codDisco = codDisco;
-        this.nomDisco = nomDisco;
-        this.fechaLanzamiento = fechaLanzamiento;
-        this.stock = stock;
         this.artista = artista;
+        this.detalleVentaCollection = new ArrayList<>();
     }
 
     public Integer getCodDisco() {
@@ -90,6 +83,14 @@ public class Disco implements Serializable{
         this.nomDisco = nomDisco;
     }
 
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
     public Date getFechaLanzamiento() {
         return fechaLanzamiento;
     }
@@ -103,35 +104,52 @@ public class Disco implements Serializable{
     }
     
     public void setFechaLanzamiento(LocalDateTime fechaLanzamiento) {
-        // Convertir LocalDateTime a Date
         this.fechaLanzamiento = Date.from(fechaLanzamiento.atZone(ZoneId.systemDefault()).toInstant());
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
     }
 
     public Artista getCodArtista() {
         return artista;
     }
 
-    public void setCodArtista(Artista artista) {
-        this.artista = artista;
+    public void setCodArtista(Artista codArtista) {
+        this.artista = codArtista;
+    }
+
+    public Collection<DetalleVenta> getDetalleVentaCollection() {
+        return detalleVentaCollection;
+    }
+
+    public void setDetalleVentaCollection(Collection<DetalleVenta> detalleVentaCollection) {
+        this.detalleVentaCollection = detalleVentaCollection;
+        // A cada detalleVenta de la lista le indico que su venta es esta
+        // Para que haya una sincronización bidireccional
+        for (DetalleVenta detalleventa : detalleVentaCollection) {
+            detalleventa.setCodDisco(this);
+        }
+    }
+    
+    public void addDetalleVenta(DetalleVenta detalleVenta) {
+        this.detalleVentaCollection.add(detalleVenta);
+        // Sincronización bidireccional con detalleVenta
+        detalleVenta.setCodDisco(this);
+    }
+
+    public void removeDetalleVenta(DetalleVenta detalleVenta) {
+        // Se borra el detalleVenta de esta venta
+        this.detalleVentaCollection.remove(detalleVenta);
+        // Se sincroniza la venta rompiendo la relación bidireccional
+        detalleVenta.setCodDisco(null);
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 47 * hash + Objects.hashCode(this.codDisco);
-        hash = 47 * hash + Objects.hashCode(this.nomDisco);
-        hash = 47 * hash + Objects.hashCode(this.fechaLanzamiento);
-        hash = 47 * hash + this.stock;
-        hash = 47 * hash + Objects.hashCode(this.artista);
-        hash = 47 * hash + Objects.hashCode(this.detalleVentaCollection);
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.codDisco);
+        hash = 59 * hash + Objects.hashCode(this.nomDisco);
+        hash = 59 * hash + Objects.hashCode(this.fechaLanzamiento);
+        hash = 59 * hash + this.stock;
+        hash = 59 * hash + Objects.hashCode(this.artista);
+        hash = 59 * hash + Objects.hashCode(this.detalleVentaCollection);
         return hash;
     }
 
@@ -164,15 +182,13 @@ public class Disco implements Serializable{
         }
         return Objects.equals(this.detalleVentaCollection, other.detalleVentaCollection);
     }
-
-    @Override
+      
     public String toString() {
-        return "Disco{" + "codDisco=" + codDisco + ", nomDisco=" + nomDisco + ", fechaLanzamiento=" + fechaLanzamiento + ", stock=" + stock + ", artista=" + artista.getNomArtista() + ", detalleVentaCollection=" + detalleVentaCollection + '}';
-    }
-
-    
-
-    
-    
+        String tmp = "";
+        for (DetalleVenta detalle : detalleVentaCollection) {
+            tmp += detalle + "\n";
+        }
+        return "Disco{" + "codDisco=" + codDisco + ", nomDisco=" + nomDisco + ", fechaLanzamiento=" + fechaLanzamiento + ", stock=" + stock + ", artista=" + artista + ", detalleVentaCollection=\n" + tmp + '}';
+    }    
     
 }
