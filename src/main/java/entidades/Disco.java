@@ -1,8 +1,13 @@
 package entidades;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,12 +17,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "discos")
+@Table(name = "disco")
 
 @NamedQueries({
     @NamedQuery(name = "Disco.findAll", query = "SELECT d FROM Disco d"),
@@ -36,16 +42,15 @@ public class Disco implements Serializable{
     @Column(name = "fechaLanzamiento")
     @Temporal(TemporalType.DATE)
     private Date fechaLanzamiento;
-    @Column(name = "cantidadDiscos")
-    private int cantidadDiscos;
+    @Column(name = "stock")
+    private int stock;
 
     @JoinColumn(name = "codArtista", referencedColumnName = "codArtista")
     @ManyToOne
     private Artista artista;
-
-    @JoinColumn(name = "codUsuario", referencedColumnName = "codUsuario")
-    @ManyToOne
-    private Usuario usuario;
+    
+    @OneToMany(mappedBy = "codDisco", cascade = CascadeType.PERSIST)
+    private Collection<DetalleVenta> detalleVentaCollection;
 
     public Disco() {
     }
@@ -54,14 +59,19 @@ public class Disco implements Serializable{
         this.codDisco = codDisco;
     }
 
-    public Disco(Integer codDisco, String nomDisco, Date fechaLanzamiento, int cantidadDiscos, Artista artista,
-    Usuario usuario) {
+    public Disco(Integer codDisco, String nomDisco, Date fechaLanzamiento, int stock) {
         this.codDisco = codDisco;
         this.nomDisco = nomDisco;
         this.fechaLanzamiento = fechaLanzamiento;
-        this.cantidadDiscos = cantidadDiscos;
+        this.stock = stock;
+    }
+    
+    public Disco(Integer codDisco, String nomDisco, Date fechaLanzamiento, int stock, Artista artista) {
+        this.codDisco = codDisco;
+        this.nomDisco = nomDisco;
+        this.fechaLanzamiento = fechaLanzamiento;
+        this.stock = stock;
         this.artista = artista;
-        this.usuario = usuario;
     }
 
     public Integer getCodDisco() {
@@ -83,17 +93,26 @@ public class Disco implements Serializable{
     public Date getFechaLanzamiento() {
         return fechaLanzamiento;
     }
+    
+    public LocalDateTime getFechaLanzamientoLocalDateTime() {
+        return fechaLanzamiento.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
 
     public void setFechaLanzamiento(Date fechaLanzamiento) {
         this.fechaLanzamiento = fechaLanzamiento;
     }
-
-    public int getCantidadDiscos() {
-        return cantidadDiscos;
+    
+    public void setFechaLanzamiento(LocalDateTime fechaLanzamiento) {
+        // Convertir LocalDateTime a Date
+        this.fechaLanzamiento = Date.from(fechaLanzamiento.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public void setCantidadDiscos(int cantidadDiscos) {
-        this.cantidadDiscos = cantidadDiscos;
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     public Artista getCodArtista() {
@@ -104,70 +123,55 @@ public class Disco implements Serializable{
         this.artista = artista;
     }
 
-    public Usuario getCodUsuario() {
-        return usuario;
-    }
-
-    public void setCodUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((codDisco == null) ? 0 : codDisco.hashCode());
-        result = prime * result + ((nomDisco == null) ? 0 : nomDisco.hashCode());
-        result = prime * result + ((fechaLanzamiento == null) ? 0 : fechaLanzamiento.hashCode());
-        result = prime * result + cantidadDiscos;
-        result = prime * result + ((artista == null) ? 0 : artista.hashCode());
-        result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
-        return result;
+        int hash = 3;
+        hash = 47 * hash + Objects.hashCode(this.codDisco);
+        hash = 47 * hash + Objects.hashCode(this.nomDisco);
+        hash = 47 * hash + Objects.hashCode(this.fechaLanzamiento);
+        hash = 47 * hash + this.stock;
+        hash = 47 * hash + Objects.hashCode(this.artista);
+        hash = 47 * hash + Objects.hashCode(this.detalleVentaCollection);
+        return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        Disco other = (Disco) obj;
-        if (codDisco == null) {
-            if (other.codDisco != null)
-                return false;
-        } else if (!codDisco.equals(other.codDisco))
+        }
+        final Disco other = (Disco) obj;
+        if (this.stock != other.stock) {
             return false;
-        if (nomDisco == null) {
-            if (other.nomDisco != null)
-                return false;
-        } else if (!nomDisco.equals(other.nomDisco))
+        }
+        if (!Objects.equals(this.nomDisco, other.nomDisco)) {
             return false;
-        if (fechaLanzamiento == null) {
-            if (other.fechaLanzamiento != null)
-                return false;
-        } else if (!fechaLanzamiento.equals(other.fechaLanzamiento))
+        }
+        if (!Objects.equals(this.codDisco, other.codDisco)) {
             return false;
-        if (cantidadDiscos != other.cantidadDiscos)
+        }
+        if (!Objects.equals(this.fechaLanzamiento, other.fechaLanzamiento)) {
             return false;
-        if (artista == null) {
-            if (other.artista != null)
-                return false;
-        } else if (!artista.equals(other.artista))
+        }
+        if (!Objects.equals(this.artista, other.artista)) {
             return false;
-        if (usuario == null) {
-            if (other.usuario != null)
-                return false;
-        } else if (!usuario.equals(other.usuario))
-            return false;
-        return true;
+        }
+        return Objects.equals(this.detalleVentaCollection, other.detalleVentaCollection);
     }
 
     @Override
     public String toString() {
-        return "Disco{" + "codDisco=" + codDisco + ", nomDisco=" + nomDisco + ", fechaLanzamiento=" + fechaLanzamiento + ", cantidadDiscos=" + cantidadDiscos + ", codArtista=" + artista.getCodArtista() + ", codUsuario=" + usuario.getCodUsuario() + '}';
+        return "Disco{" + "codDisco=" + codDisco + ", nomDisco=" + nomDisco + ", fechaLanzamiento=" + fechaLanzamiento + ", stock=" + stock + ", artista=" + artista.getNomArtista() + ", detalleVentaCollection=" + detalleVentaCollection + '}';
     }
+
+    
+
     
     
     

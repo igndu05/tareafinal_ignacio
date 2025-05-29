@@ -1,6 +1,8 @@
 package entidades;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -9,7 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "artistas")
+@Table(name = "artista")
 
 @NamedQueries({
     @NamedQuery(name = "Artista.findAll", query = "SELECT a FROM Artista a"),
@@ -39,7 +40,7 @@ public class Artista implements Serializable {
     private String nomArtista;
     @Basic(optional = false)
     @Column(name = "fechaNacimientoArtista")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaNacimientoArtista;
     
 
@@ -85,9 +86,18 @@ public class Artista implements Serializable {
     public Date getFechaNacimientoArtista() {
         return fechaNacimientoArtista;
     }
+    
+    public LocalDateTime getFechaLocalDateTime() {
+        return fechaNacimientoArtista.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
 
     public void setFechaNacimientoArtista(Date fechaNacimientoArtista) {
         this.fechaNacimientoArtista = fechaNacimientoArtista;
+    }
+    
+    public void setFechaNacimientoArtista(LocalDateTime fechaNacimientoArtista) {
+        // Convertir LocalDateTime a Date
+        this.fechaNacimientoArtista = Date.from(fechaNacimientoArtista.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public Collection<Disco> getDiscoCollection() {

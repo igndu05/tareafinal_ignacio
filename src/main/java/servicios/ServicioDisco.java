@@ -1,7 +1,7 @@
 package servicios;
 
 import controladores.DiscoController;
-import entidades.Artista;
+import entidades.Disco;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,19 +9,19 @@ import java.util.Date;
 public class ServicioDisco {
     private static final DiscoController dc = new DiscoController();
     
-    public static void insertarArtistasEjemplo() {
+    public static void insertarDiscosEjemplo() {
         var lista = new ArrayList<Disco>();
-        lista.add(new Dis);
-        lista.add(new Artista(2, "hola2", Date.from(Instant.now())));
-        lista.add(new Artista(3, "hola3", Date.from(Instant.now())));
-        lista.add(new Artista(4, "hola4", Date.from(Instant.now())));
-        lista.add(new Artista(5, "hola5", Date.from(Instant.now())));
+        lista.add(new Disco(1, "Disco 1", Date.from(Instant.now()), 7));
+        lista.add(new Disco(2, "Disco 2", Date.from(Instant.now()), 10));
+        lista.add(new Disco(3, "Disco 3", Date.from(Instant.now()), 3));
+        lista.add(new Disco(4, "Disco 4", Date.from(Instant.now()), 6));
+        lista.add(new Disco(5, "Disco 5", Date.from(Instant.now()), 2));
         // Todos los clientes se guardan sin ventas
-        for (Artista a : lista) {
-            dc.create(a);
+        for (Disco d : lista) {
+            dc.create(d);
             
         }
-        System.out.println("--- > Usuarios de ejemplo insertados ");
+        System.out.println("--- > Discos de ejemplo insertados ");
     }
     
     public static void mostrarTodosDiscos() {
