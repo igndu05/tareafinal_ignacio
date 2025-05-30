@@ -44,7 +44,7 @@ public class Artista implements Serializable {
     private Date fechaNacimientoArtista;
     
 
-    @OneToMany(mappedBy = "codArtista", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "artista", cascade = CascadeType.PERSIST)
     private Collection<Disco> discoCollection;
 
     public Artista() {
@@ -106,6 +106,9 @@ public class Artista implements Serializable {
 
     public void setDiscoCollection(Collection<Disco> discoCollection) {
         this.discoCollection = discoCollection;
+        for (Disco d : discoCollection) {
+            d.setCodArtista(this);
+        }
     }
 
     @Override

@@ -46,7 +46,7 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.PERSIST)
-    private Collection<Disco> discoCollection;
+    private Collection<Venta> ventaCollection;
 
     // Constructores
     public Usuario() {
@@ -61,7 +61,7 @@ public class Usuario implements Serializable {
         this.dniUsuario = dniUsuario;
         this.localidadUsuario = localidadUsuario;
         this.telefUsuario = telefUsuario;
-        this.discoCollection = new ArrayList<>();
+        this.ventaCollection = new ArrayList<>();
     }
 
     // Getters y Setters
@@ -97,8 +97,8 @@ public class Usuario implements Serializable {
     public void setTelefUsuario(String telefUsuario) {
         this.telefUsuario = telefUsuario;
     }
-    public Collection<Disco> getDiscoCollection() {
-        return discoCollection;
+    public Collection<Venta> getVentaCollection() {
+        return ventaCollection;
     }
 
     @Override
@@ -110,7 +110,7 @@ public class Usuario implements Serializable {
         result = prime * result + ((dniUsuario == null) ? 0 : dniUsuario.hashCode());
         result = prime * result + ((localidadUsuario == null) ? 0 : localidadUsuario.hashCode());
         result = prime * result + ((telefUsuario == null) ? 0 : telefUsuario.hashCode());
-        result = prime * result + ((discoCollection == null) ? 0 : discoCollection.hashCode());
+        result = prime * result + ((ventaCollection == null) ? 0 : ventaCollection.hashCode());
         return result;
     }
 
@@ -148,10 +148,10 @@ public class Usuario implements Serializable {
                 return false;
         } else if (!telefUsuario.equals(other.telefUsuario))
             return false;
-        if (discoCollection == null) {
-            if (other.discoCollection != null)
+        if (ventaCollection == null) {
+            if (other.ventaCollection != null)
                 return false;
-        } else if (!discoCollection.equals(other.discoCollection))
+        } else if (!ventaCollection.equals(other.ventaCollection))
             return false;
         return true;
     }
@@ -160,11 +160,26 @@ public class Usuario implements Serializable {
     @Override
     public String toString() {
         String tmp = "";
-        for (Disco disco : discoCollection) {
-            tmp+=disco+"\n";
+        for (Venta v : ventaCollection) {
+            tmp+=v+"\n";
         }
-        return "Usuario{" + "codUsuario=" + codUsuario + ", nombreUsuario=" + nombreUsuario + ", dniUsuario=" + dniUsuario + ", localidadUsuario=" + localidadUsuario + ", telefUsuario=" + telefUsuario + ", discoCollection=" + discoCollection + '}';
+        return "Usuario{" + "codUsuario=" + codUsuario + ", nombreUsuario=" + nombreUsuario + ", dniUsuario=" + dniUsuario + ", localidadUsuario=" + localidadUsuario + ", telefUsuario=" + telefUsuario + ", ventaCollection=" + ventaCollection + '}';
     }
 
+    public void setVentaCollection(Collection<Venta> ventaCollection) {
+        this.ventaCollection = ventaCollection;
+        for (Venta venta : ventaCollection) {
+            venta.setCodUsuario(this);
+        }
+    }
     
+    public void addVenta(Venta venta){
+        this.ventaCollection.add(venta);
+        venta.setCodUsuario(this);
+    }
+    
+    public void removeVenta(Venta venta){
+        this.ventaCollection.remove(venta);
+        venta.setCodUsuario(null);
+    }
 }

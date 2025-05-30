@@ -29,6 +29,7 @@ public class Seleccion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        Ventas = new javax.swing.JButton();
         Artistas = new javax.swing.JButton();
         Usuarios = new javax.swing.JButton();
         Discos = new javax.swing.JButton();
@@ -39,11 +40,22 @@ public class Seleccion extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        Ventas.setBackground(new java.awt.Color(153, 153, 153));
+        Ventas.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
+        Ventas.setForeground(new java.awt.Color(0, 0, 0));
+        Ventas.setText("Ventas");
+        Ventas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VentasActionPerformed(evt);
+            }
+        });
+        getContentPane().add(Ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 180, 160, 90));
+
         Artistas.setBackground(new java.awt.Color(153, 153, 153));
         Artistas.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
         Artistas.setForeground(new java.awt.Color(0, 0, 0));
         Artistas.setText("Artistas");
-        getContentPane().add(Artistas, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 180, 160, 90));
+        getContentPane().add(Artistas, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, 160, 90));
 
         Usuarios.setBackground(new java.awt.Color(153, 153, 153));
         Usuarios.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
@@ -54,7 +66,7 @@ public class Seleccion extends javax.swing.JFrame {
                 UsuariosActionPerformed(evt);
             }
         });
-        getContentPane().add(Usuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 180, 160, 90));
+        getContentPane().add(Usuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 180, 160, 90));
 
         Discos.setBackground(new java.awt.Color(153, 153, 153));
         Discos.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
@@ -65,7 +77,7 @@ public class Seleccion extends javax.swing.JFrame {
                 DiscosActionPerformed(evt);
             }
         });
-        getContentPane().add(Discos, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 180, 160, 90));
+        getContentPane().add(Discos, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 180, 160, 90));
 
         VolverMenuPrincipal.setBackground(new java.awt.Color(153, 153, 153));
         VolverMenuPrincipal.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
@@ -92,6 +104,10 @@ public class Seleccion extends javax.swing.JFrame {
     private void UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UsuariosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_UsuariosActionPerformed
+
+    private void VentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VentasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_VentasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -132,6 +148,7 @@ public class Seleccion extends javax.swing.JFrame {
     private javax.swing.JButton Artistas;
     private javax.swing.JButton Discos;
     private javax.swing.JButton Usuarios;
+    private javax.swing.JButton Ventas;
     private javax.swing.JButton VolverMenuPrincipal;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel textoSeleccion;
