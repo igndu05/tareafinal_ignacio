@@ -13,7 +13,7 @@ public class UsuarioController {
     private final EntityManagerFactory emf;
 
     public UsuarioController() {
-        this.emf = Persistence.createEntityManagerFactory("compra_discos");
+        this.emf = Persistence.createEntityManagerFactory("discos");
     }
 
     private EntityManager getEntityManager() {
@@ -102,8 +102,8 @@ public class UsuarioController {
             // de la tabla cliente y reiniciar el contador de autoincremento
             // Una native query es una consulta SQL que se ejecuta directamente en la base de datos
             // sin pasar por el mapeo de entidades de JPA
-            em.createNativeQuery("delete from usuarios").executeUpdate();
-            em.createNativeQuery("alter table compra_discos.usuarios AUTO_INCREMENT = 1").executeUpdate();
+            em.createNativeQuery("delete from usuario").executeUpdate();
+            em.createNativeQuery("alter table compra_discos.usuario AUTO_INCREMENT = 1").executeUpdate();
             tx.commit();
         } catch (Exception ex) {
             if (tx.isActive()) {

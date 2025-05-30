@@ -20,7 +20,7 @@ public class VentaController {
 
     public VentaController() {
         // Nombre de la unidad de persistencia definida en persistence.xml
-        this.emf = Persistence.createEntityManagerFactory("compra_discos");
+        this.emf = Persistence.createEntityManagerFactory("discos");
     }
 
     private EntityManager getEntityManager() {

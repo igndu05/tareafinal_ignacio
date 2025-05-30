@@ -101,8 +101,8 @@ public class DiscoController {
             // de la tabla cliente y reiniciar el contador de autoincremento
             // Una native query es una consulta SQL que se ejecuta directamente en la base de datos
             // sin pasar por el mapeo de entidades de JPA
-            em.createNativeQuery("delete from discos").executeUpdate();
-            em.createNativeQuery("alter table compra_discos.discos AUTO_INCREMENT = 1").executeUpdate();
+            em.createNativeQuery("delete from disco").executeUpdate();
+            em.createNativeQuery("alter table compra_discos.disco AUTO_INCREMENT = 1").executeUpdate();
             tx.commit();
         } catch (Exception ex) {
             if (tx.isActive()) {
