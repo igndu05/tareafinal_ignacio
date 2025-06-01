@@ -40,7 +40,7 @@ public class ServicioVenta {
         // Se crean los objetos detalle venta con los productos y cantidades cualesquiera
         DetalleVenta detalle = new DetalleVenta();
         Disco d1 = dc.findById(1);
-        detalle.setCodDisco(d1);
+        detalle.setDisco(d1);
         detalle.setCantidad(12);
 
         // Añade el detalle a la venta y la venta al detalle
@@ -49,8 +49,8 @@ public class ServicioVenta {
         // Se crea otro detalle 
         Disco d2 = dc.findById(2);
         detalle = new DetalleVenta();
-        detalle.setCodDisco(d2);
-        detalle.setCantidad(120);
+        detalle.setDisco(d2);
+        detalle.setCantidad(12);
         
         // Añade el detalle a la venta y la venta al detalle
         venta.addDetalleVenta(detalle);

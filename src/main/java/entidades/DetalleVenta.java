@@ -36,16 +36,17 @@ public class DetalleVenta implements Serializable {
     @Basic(optional = false)
     @Column(name = "codDetalleVenta")
     private Integer codDetalleVenta;
+    
     @Column(name = "cantidad")
-    private int cantidad;
+    private Integer cantidad;
     
     @JoinColumn(name = "codVenta", referencedColumnName = "codVenta")
-    @ManyToOne
-    private Venta codVenta;
+    @ManyToOne(optional = false)
+    private Venta venta;
 
     @JoinColumn(name = "codDisco", referencedColumnName = "codDisco")
-    @ManyToOne
-    private Disco codDisco;
+    @ManyToOne(optional = false)
+    private Disco disco;
 
     public DetalleVenta() {
     }
@@ -71,19 +72,19 @@ public class DetalleVenta implements Serializable {
     }
 
     public Venta getVenta() {
-        return codVenta;
+        return venta;
     }
 
     public void setVenta(Venta venta) {
-        this.codVenta = venta;
+        this.venta = venta;
     }
 
-    public Disco getCodDisco() {
-        return codDisco;
+    public Disco getDisco() {
+        return disco;
     }
 
-    public void setCodDisco(Disco disco) {
-        this.codDisco = disco;
+    public void setDisco(Disco disco) {
+        this.disco = disco;
     }
 
     @Override
@@ -91,8 +92,8 @@ public class DetalleVenta implements Serializable {
         int hash = 7;
         hash = 37 * hash + Objects.hashCode(this.codDetalleVenta);
         hash = 37 * hash + this.cantidad;
-        hash = 37 * hash + Objects.hashCode(this.codVenta);
-        hash = 37 * hash + Objects.hashCode(this.codDisco);
+        hash = 37 * hash + Objects.hashCode(this.venta);
+        hash = 37 * hash + Objects.hashCode(this.disco);
         return hash;
     }
 
@@ -114,15 +115,15 @@ public class DetalleVenta implements Serializable {
         if (!Objects.equals(this.codDetalleVenta, other.codDetalleVenta)) {
             return false;
         }
-        if (!Objects.equals(this.codVenta, other.codVenta)) {
+        if (!Objects.equals(this.venta, other.venta)) {
             return false;
         }
-        return Objects.equals(this.codDisco, other.codDisco);
+        return Objects.equals(this.disco, other.disco);
     }
 
     @Override
     public String toString() {
-        return "DetalleVenta{" + "codDetalleVenta=" + codDetalleVenta + ", cantidad=" + cantidad + ", codVenta=" + codVenta + ", codDisco=" + codDisco.getCodDisco() + '}';
+        return "DetalleVenta{" + "codDetalleVenta=" + codDetalleVenta + ", cantidad=" + cantidad + ", venta=" + venta.getCodVenta() + ", disco=" + disco.getCodDisco() + '}';
     }
 
 }

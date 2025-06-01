@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,15 +37,15 @@ public class Artista implements Serializable {
     @Basic(optional = false)
     @Column(name = "codArtista")
     private Integer codArtista;
+    
     @Column(name = "nomArtista")
     private String nomArtista;
-    @Basic(optional = false)
+    
     @Column(name = "fechaNacimientoArtista")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaNacimientoArtista;
     
-
-    @OneToMany(mappedBy = "artista", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Collection<Disco> discoCollection;
 
     public Artista() {

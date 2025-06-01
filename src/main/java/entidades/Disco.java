@@ -38,19 +38,23 @@ public class Disco implements Serializable{
     @Basic(optional = false)
     @Column(name = "codDisco")
     private Integer codDisco;
+    
     @Column(name = "nomDisco")
     private String nomDisco;
+    
     @Column(name = "fechaLanzamiento")
     @Temporal(TemporalType.DATE)
     private Date fechaLanzamiento;
+    
     @Column(name = "stock")
-    private int stock;
+    private Integer stock;
 
     @JoinColumn(name = "codArtista", referencedColumnName = "codArtista")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Artista artista;
     
-    @OneToMany(mappedBy = "codDisco", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="codDisco")
     private Collection<DetalleVenta> detalleVentaCollection;
 
     public Disco() {
@@ -124,21 +128,21 @@ public class Disco implements Serializable{
         // A cada detalleVenta de la lista le indico que su venta es esta
         // Para que haya una sincronización bidireccional
         for (DetalleVenta detalleventa : detalleVentaCollection) {
-            detalleventa.setCodDisco(this);
+            detalleventa.setDisco(this);
         }
     }
     
     public void addDetalleVenta(DetalleVenta detalleVenta) {
         this.detalleVentaCollection.add(detalleVenta);
         // Sincronización bidireccional con detalleVenta
-        detalleVenta.setCodDisco(this);
+        detalleVenta.setDisco(this);
     }
 
     public void removeDetalleVenta(DetalleVenta detalleVenta) {
         // Se borra el detalleVenta de esta venta
         this.detalleVentaCollection.remove(detalleVenta);
         // Se sincroniza la venta rompiendo la relación bidireccional
-        detalleVenta.setCodDisco(null);
+        detalleVenta.setDisco(null);
     }
 
     @Override

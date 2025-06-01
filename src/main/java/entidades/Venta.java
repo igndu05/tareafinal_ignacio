@@ -44,17 +44,17 @@ public class Venta implements Serializable {
     @Basic(optional = false)
     @Column(name = "codVenta")
     private Integer codVenta;
+    
     @Column(name = "fechaVenta")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaVenta;
 
-    // En este caso Venta es la propietaria de la relación con Cliente @JoinColumn
-    // Esta tabla tiene la clave foránea a Cliente
     @JoinColumn(name = "codUsuario", referencedColumnName = "codUsuario")
     @ManyToOne(optional = false)
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "codVenta", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "codVenta")
     private Collection<DetalleVenta> detalleVentaCollection;
 
     public Venta() {

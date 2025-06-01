@@ -8,9 +8,11 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -32,20 +34,24 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @Column(name = "codUsuario")
     private Integer codUsuario;
+    
     @Column(name = "nomUsuario")
     private String nombreUsuario;
+    
     @Basic(optional = false)
     @Column(name = "dniUsuario")
     private String dniUsuario;
+    
     @Basic(optional = false)
     @Column(name = "localidadUsuario")
     private String localidadUsuario;
+    
     @Basic(optional = false)
     @Column(name = "telefUsuario")
     private String telefUsuario;
-    @Basic(optional = false)
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "codUsuario")
     private Collection<Venta> ventaCollection;
 
     // Constructores
