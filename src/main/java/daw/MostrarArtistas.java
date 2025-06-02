@@ -16,6 +16,7 @@ public class MostrarArtistas extends javax.swing.JFrame {
     public MostrarArtistas() {
         initComponents();
         setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     /**

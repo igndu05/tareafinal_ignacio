@@ -15,6 +15,8 @@ public class MostrarVentas extends javax.swing.JFrame {
      */
     public MostrarVentas() {
         initComponents();
+        setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     /**

@@ -16,6 +16,7 @@ public class MostrarDiscos extends javax.swing.JFrame {
     public MostrarDiscos() {
         initComponents();
         setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     /**

@@ -16,6 +16,7 @@ public class Principal extends javax.swing.JFrame {
     public Principal() {
         initComponents();
         setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -27,29 +28,39 @@ public class Principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        Creditos = new javax.swing.JLabel();
+        BotonSalir = new javax.swing.JButton();
         Ingresar = new javax.swing.JButton();
         TituloPrincipal = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        Fondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Ignacio Durán, 1º DAW");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 170, -1));
+        Creditos.setForeground(new java.awt.Color(255, 255, 255));
+        Creditos.setText("Ignacio Durán, 1º DAW");
+        getContentPane().add(Creditos, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 170, -1));
 
-        jButton2.setBackground(new java.awt.Color(153, 153, 153));
-        jButton2.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(0, 0, 0));
-        jButton2.setText("Salir");
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 270, 180, 80));
+        BotonSalir.setBackground(new java.awt.Color(153, 153, 153));
+        BotonSalir.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
+        BotonSalir.setForeground(new java.awt.Color(0, 0, 0));
+        BotonSalir.setText("Salir");
+        BotonSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonSalirActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BotonSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 270, 180, 80));
 
         Ingresar.setBackground(new java.awt.Color(153, 153, 153));
         Ingresar.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
         Ingresar.setForeground(new java.awt.Color(0, 0, 0));
         Ingresar.setText("Ingresar");
+        Ingresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IngresarActionPerformed(evt);
+            }
+        });
         getContentPane().add(Ingresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 160, 180, 80));
 
         TituloPrincipal.setFont(new java.awt.Font("Courier 10 Pitch", 1, 33)); // NOI18N
@@ -58,11 +69,20 @@ public class Principal extends javax.swing.JFrame {
         TituloPrincipal.setToolTipText("");
         getContentPane().add(TituloPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 330, 90));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/FondoAplicacion.png"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 710, 440));
+        Fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/FondoAplicacion.png"))); // NOI18N
+        getContentPane().add(Fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 710, 440));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void IngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IngresarActionPerformed
+        new Seleccion().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_IngresarActionPerformed
+
+    private void BotonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonSalirActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_BotonSalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -101,10 +121,10 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BotonSalir;
+    private javax.swing.JLabel Creditos;
+    private javax.swing.JLabel Fondo;
     private javax.swing.JButton Ingresar;
     private javax.swing.JLabel TituloPrincipal;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }

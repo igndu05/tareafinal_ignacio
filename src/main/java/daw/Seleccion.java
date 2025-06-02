@@ -18,6 +18,7 @@ public class Seleccion extends javax.swing.JFrame {
     public Seleccion() {
         initComponents();
         setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -55,6 +56,11 @@ public class Seleccion extends javax.swing.JFrame {
         Artistas.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
         Artistas.setForeground(new java.awt.Color(0, 0, 0));
         Artistas.setText("Artistas");
+        Artistas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ArtistasActionPerformed(evt);
+            }
+        });
         getContentPane().add(Artistas, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, 160, 90));
 
         Usuarios.setBackground(new java.awt.Color(153, 153, 153));
@@ -83,6 +89,11 @@ public class Seleccion extends javax.swing.JFrame {
         VolverMenuPrincipal.setFont(new java.awt.Font("Liberation Sans", 2, 24)); // NOI18N
         VolverMenuPrincipal.setForeground(new java.awt.Color(0, 0, 0));
         VolverMenuPrincipal.setText("Volver al menu principal");
+        VolverMenuPrincipal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VolverMenuPrincipalActionPerformed(evt);
+            }
+        });
         getContentPane().add(VolverMenuPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 320, 320, 110));
 
         textoSeleccion.setBackground(new java.awt.Color(255, 255, 255));
@@ -98,16 +109,31 @@ public class Seleccion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void DiscosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DiscosActionPerformed
-        // TODO add your handling code here:
+        new MostrarDiscos().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_DiscosActionPerformed
 
     private void UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UsuariosActionPerformed
-        // TODO add your handling code here:
+        new MostrarUsuarios().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_UsuariosActionPerformed
 
     private void VentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VentasActionPerformed
-        // TODO add your handling code here:
+        new MostrarVentas().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_VentasActionPerformed
+
+    private void ArtistasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ArtistasActionPerformed
+        new MostrarArtistas().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_ArtistasActionPerformed
+
+    private void VolverMenuPrincipalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VolverMenuPrincipalActionPerformed
+        new Principal().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_VolverMenuPrincipalActionPerformed
+
+    
 
     /**
      * @param args the command line arguments

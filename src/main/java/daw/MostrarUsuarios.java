@@ -14,6 +14,7 @@ public class MostrarUsuarios extends javax.swing.JFrame {
      * Creates new form MostrarUsuarios
      */
     public MostrarUsuarios() {
+        setLocationRelativeTo(null);
         setResizable(false);
         initComponents();
     }
