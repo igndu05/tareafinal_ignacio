@@ -4,12 +4,18 @@
  */
 package daw;
 
+import controladores.UsuarioController;
+import entidades.Disco;
+import entidades.Usuario;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ignacio
  */
 public class MostrarUsuarios extends javax.swing.JFrame {
-
+    private UsuarioController usuarioController = new UsuarioController();
     /**
      * Creates new form MostrarUsuarios
      */
@@ -17,6 +23,7 @@ public class MostrarUsuarios extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         initComponents();
+        cargarUsuariosEnTabla();
     }
 
     /**
@@ -91,7 +98,28 @@ public class MostrarUsuarios extends javax.swing.JFrame {
     private void CrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearUsuarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_CrearUsuarioActionPerformed
+    
+    
+    private void cargarUsuariosEnTabla() {
+    List<Usuario> usuario = usuarioController.findAll();
 
+    DefaultTableModel modelo = new DefaultTableModel();
+    modelo.setColumnIdentifiers(new String[] { "ID", "Nombre", "DNI", "Localidad", "Telefono", "Coleccion de Ventas" });
+
+    for (Usuario u : usuario) {
+        modelo.addRow(new Object[] {
+            u.getCodUsuario(),
+            u.getNombreUsuario(),
+            u.getDniUsuario(),
+            u.getLocalidadUsuario(),
+            u.getTelefUsuario(),
+            (u.getVentaCollection() != null) ? u.getVentaCollection() : "Sin ventas"
+        });
+    }
+
+    jTable1.setModel(modelo);
+}
+    
     /**
      * @param args the command line arguments
      */
