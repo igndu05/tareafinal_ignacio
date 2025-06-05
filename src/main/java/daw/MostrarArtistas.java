@@ -4,12 +4,18 @@
  */
 package daw;
 
+import controladores.ArtistaController;
+import entidades.Artista;
+import entidades.Disco;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ignacio
  */
 public class MostrarArtistas extends javax.swing.JFrame {
-
+    private ArtistaController artistaController = new ArtistaController();
     /**
      * Creates new form MostrarArtistas
      */
@@ -17,6 +23,7 @@ public class MostrarArtistas extends javax.swing.JFrame {
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);
+        cargarArtistasEnTabla();
     }
 
     /**
@@ -82,7 +89,23 @@ public class MostrarArtistas extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    private void cargarArtistasEnTabla() {
+    List<Artista> artistas = artistaController.findAll();
 
+    DefaultTableModel modelo = new DefaultTableModel();
+    modelo.setColumnIdentifiers(new String[] { "ID", "Nombre", "Fecha_Nacimiento" });
+
+    for (Artista artista : artistas) {
+        modelo.addRow(new Object[] {
+            artista.getCodArtista(),
+            artista.getNomArtista(),
+            artista.getFechaNacimientoArtista()
+        });
+    }
+
+    jTable1.setModel(modelo);
+}
     /**
      * @param args the command line arguments
      */

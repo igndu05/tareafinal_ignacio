@@ -49,7 +49,7 @@ public class DiscoController {
     public List<Disco> findAll() {
         EntityManager em = getEntityManager();
         try {
-            return em.createNamedQuery("Discos.findAll", Disco.class).getResultList();
+            return em.createNamedQuery("Disco.findAll", Disco.class).getResultList();
         } finally {
             em.close();
         }

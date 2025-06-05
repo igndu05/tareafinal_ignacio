@@ -4,12 +4,19 @@
  */
 package daw;
 
+import java.util.List;
+
+import javax.swing.table.DefaultTableModel;
+
+import controladores.DiscoController;
+import entidades.Disco;
+
 /**
  *
  * @author ignacio
  */
 public class MostrarDiscos extends javax.swing.JFrame {
-
+    private DiscoController discoController = new DiscoController();
     /**
      * Creates new form MostrarDiscos
      */
@@ -17,6 +24,7 @@ public class MostrarDiscos extends javax.swing.JFrame {
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);
+        cargarDiscosEnTabla();
     }
 
     /**
@@ -83,6 +91,24 @@ public class MostrarDiscos extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cargarDiscosEnTabla() {
+    List<Disco> discos = discoController.findAll();
+
+    DefaultTableModel modelo = new DefaultTableModel();
+    modelo.setColumnIdentifiers(new String[] { "ID", "Nombre", "Lanzamiento", "Artista" });
+
+    for (Disco disco : discos) {
+        modelo.addRow(new Object[] {
+            disco.getCodDisco(),
+            disco.getNomDisco(),
+            disco.getFechaLanzamiento(),
+            (disco.getCodArtista() != null) ? disco.getCodArtista() : "Desconocido"
+        });
+    }
+
+    jTable1.setModel(modelo);
+}
 
     /**
      * @param args the command line arguments
