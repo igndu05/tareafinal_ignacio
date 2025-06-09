@@ -125,6 +125,6 @@ public class Main {
     private static void prepararBaseDatos() {
         borrarTodo();
         ServicioUsuario.insertarUsuariosEjemplo();
-        ServicioDisco.insertarDiscosEjemplo();
+        
     }
 }
