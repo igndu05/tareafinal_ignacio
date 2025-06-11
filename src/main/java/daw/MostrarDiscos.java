@@ -4,19 +4,28 @@
  */
 package daw;
 
+import controladores.ArtistaController;
 import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
 import controladores.DiscoController;
+import entidades.Artista;
 import entidades.Disco;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author ignacio
  */
 public class MostrarDiscos extends javax.swing.JFrame {
+
     private DiscoController discoController = new DiscoController();
+    private ArtistaController artistaController = new ArtistaController();
+
     /**
      * Creates new form MostrarDiscos
      */
@@ -63,21 +72,41 @@ public class MostrarDiscos extends javax.swing.JFrame {
         CrearDisco.setBackground(new java.awt.Color(255, 255, 255));
         CrearDisco.setForeground(new java.awt.Color(0, 0, 0));
         CrearDisco.setText("Crear Disco");
+        CrearDisco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CrearDiscoActionPerformed(evt);
+            }
+        });
         getContentPane().add(CrearDisco, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 140, 190, 50));
 
         BorrarDisco.setBackground(new java.awt.Color(255, 255, 255));
         BorrarDisco.setForeground(new java.awt.Color(0, 0, 0));
         BorrarDisco.setText("Borrar Disco");
+        BorrarDisco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BorrarDiscoActionPerformed(evt);
+            }
+        });
         getContentPane().add(BorrarDisco, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 240, 190, 50));
 
         ActualizarDisco.setBackground(new java.awt.Color(255, 255, 255));
         ActualizarDisco.setForeground(new java.awt.Color(0, 0, 0));
         ActualizarDisco.setText("Actualizar Disco");
+        ActualizarDisco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ActualizarDiscoActionPerformed(evt);
+            }
+        });
         getContentPane().add(ActualizarDisco, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 340, 190, 50));
 
         Volver.setBackground(new java.awt.Color(255, 255, 255));
         Volver.setForeground(new java.awt.Color(0, 0, 0));
         Volver.setText("Volver");
+        Volver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VolverActionPerformed(evt);
+            }
+        });
         getContentPane().add(Volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 440, 190, 50));
 
         TextoTitulo.setFont(new java.awt.Font("Fira Sans Condensed ExtraBold", 1, 24)); // NOI18N
@@ -92,23 +121,161 @@ public class MostrarDiscos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cargarDiscosEnTabla() {
-    List<Disco> discos = discoController.findAll();
+    private void VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VolverActionPerformed
+        new Seleccion().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_VolverActionPerformed
 
-    DefaultTableModel modelo = new DefaultTableModel();
-    modelo.setColumnIdentifiers(new String[] { "ID", "Nombre", "Lanzamiento", "Artista" });
+    private void CrearDiscoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearDiscoActionPerformed
+        CrearDisco.addActionListener(e -> {
+            String nombre = JOptionPane.showInputDialog(this, "Nombre del disco:");
+            if (nombre == null || nombre.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nombre no puede estar vacío.");
+                return;
+            }
 
-    for (Disco disco : discos) {
-        modelo.addRow(new Object[] {
-            disco.getCodDisco(),
-            disco.getNomDisco(),
-            disco.getFechaLanzamiento(),
-            (disco.getCodArtista() != null) ? disco.getCodArtista() : "Desconocido"
+            String fechaStr = JOptionPane.showInputDialog(this, "Fecha de lanzamiento (YYYY-MM-DD):");
+            Date fechaLanzamiento = null;
+            try {
+                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+                fechaLanzamiento = formato.parse(fechaStr);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "Formato de fecha inválido.");
+                return;
+            }
+
+            String stockStr = JOptionPane.showInputDialog(this, "Stock (número entero):");
+            int stock;
+            try {
+                stock = Integer.parseInt(stockStr);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Stock debe ser un número entero.");
+                return;
+            }
+
+            String artistaIdStr = JOptionPane.showInputDialog(this, "ID del artista asociado:");
+            int artistaId;
+            try {
+                artistaId = Integer.parseInt(artistaIdStr);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "ID artista debe ser un número entero.");
+                return;
+            }
+
+            Artista artista = artistaController.findById(artistaId);
+            if (artista == null) {
+                JOptionPane.showMessageDialog(this, "No existe artista con ese ID.");
+                return;
+            }
+
+            Disco disco = new Disco();
+            disco.setNomDisco(nombre);
+            disco.setFechaLanzamiento(fechaLanzamiento);
+            disco.setStock(stock);
+            disco.setCodArtista(artista);
+
+            discoController.create(disco);
+            cargarDiscosEnTabla();
         });
-    }
+    }//GEN-LAST:event_CrearDiscoActionPerformed
 
-    jTable1.setModel(modelo);
-}
+    private void BorrarDiscoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarDiscoActionPerformed
+        BorrarDisco.addActionListener(e -> {
+            int filaSeleccionada = jTable1.getSelectedRow();
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(this, "Selecciona un disco para borrar.");
+                return;
+            }
+
+            int id = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
+            int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro que deseas eliminar este disco?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                discoController.delete(id);
+                cargarDiscosEnTabla();
+            }
+        });
+    }//GEN-LAST:event_BorrarDiscoActionPerformed
+
+    private void ActualizarDiscoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActualizarDiscoActionPerformed
+        ActualizarDisco.addActionListener(e -> {
+            int filaSeleccionada = jTable1.getSelectedRow();
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(this, "Selecciona un disco para actualizar.");
+                return;
+            }
+
+            int id = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
+            Disco disco = discoController.findById(id);
+
+            if (disco != null) {
+                String nuevoNombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", disco.getNomDisco());
+                if (nuevoNombre == null || nuevoNombre.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Nombre no puede estar vacío.");
+                    return;
+                }
+
+                String nuevaFechaStr = JOptionPane.showInputDialog(this, "Nueva fecha lanzamiento (YYYY-MM-DD):", new SimpleDateFormat("yyyy-MM-dd").format(disco.getFechaLanzamiento()));
+                Date nuevaFecha;
+                try {
+                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+                    nuevaFecha = formato.parse(nuevaFechaStr);
+                } catch (ParseException ex) {
+                    JOptionPane.showMessageDialog(this, "Formato de fecha inválido.");
+                    return;
+                }
+
+                String nuevoStockStr = JOptionPane.showInputDialog(this, "Nuevo stock:", Integer.toString(disco.getStock()));
+                int nuevoStock;
+                try {
+                    nuevoStock = Integer.parseInt(nuevoStockStr);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Stock debe ser un número entero.");
+                    return;
+                }
+
+                String nuevoArtistaIdStr = JOptionPane.showInputDialog(this, "Nuevo ID artista:", disco.getCodArtista() != null ? Integer.toString(disco.getCodArtista().getCodArtista()) : "");
+                int nuevoArtistaId;
+                try {
+                    nuevoArtistaId = Integer.parseInt(nuevoArtistaIdStr);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "ID artista debe ser un número entero.");
+                    return;
+                }
+
+                Artista nuevoArtista = artistaController.findById(nuevoArtistaId);
+                if (nuevoArtista == null) {
+                    JOptionPane.showMessageDialog(this, "No existe artista con ese ID.");
+                    return;
+                }
+
+                disco.setNomDisco(nuevoNombre);
+                disco.setFechaLanzamiento(nuevaFecha);
+                disco.setStock(nuevoStock);
+                disco.setCodArtista(nuevoArtista);
+
+                discoController.update(disco);
+                cargarDiscosEnTabla();
+            }
+        });
+    }//GEN-LAST:event_ActualizarDiscoActionPerformed
+
+    private void cargarDiscosEnTabla() {
+        List<Disco> discos = discoController.findAll();
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new String[]{"ID", "Nombre", "Lanzamiento", "Artista"});
+
+        for (Disco disco : discos) {
+            modelo.addRow(new Object[]{
+                disco.getCodDisco(),
+                disco.getNomDisco(),
+                disco.getFechaLanzamiento(),
+                disco.getCodArtista() != null ? disco.getCodArtista() + " - " + disco.getCodArtista().getNomArtista() : "N/A"
+            });
+        }
+
+        jTable1.setModel(modelo);
+    }
 
     /**
      * @param args the command line arguments

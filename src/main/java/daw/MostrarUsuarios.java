@@ -7,7 +7,9 @@ package daw;
 import controladores.UsuarioController;
 import entidades.Disco;
 import entidades.Usuario;
+import java.awt.HeadlessException;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,7 +17,9 @@ import javax.swing.table.DefaultTableModel;
  * @author ignacio
  */
 public class MostrarUsuarios extends javax.swing.JFrame {
+
     private UsuarioController usuarioController = new UsuarioController();
+
     /**
      * Creates new form MostrarUsuarios
      */
@@ -72,6 +76,11 @@ public class MostrarUsuarios extends javax.swing.JFrame {
         BorrarUsuario.setBackground(new java.awt.Color(255, 255, 255));
         BorrarUsuario.setForeground(new java.awt.Color(0, 0, 0));
         BorrarUsuario.setText("Borrar Usuario");
+        BorrarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BorrarUsuarioActionPerformed(evt);
+            }
+        });
         getContentPane().add(BorrarUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 240, 190, 50));
 
         ActualizarUsuario.setBackground(new java.awt.Color(255, 255, 255));
@@ -82,6 +91,11 @@ public class MostrarUsuarios extends javax.swing.JFrame {
         Volver.setBackground(new java.awt.Color(255, 255, 255));
         Volver.setForeground(new java.awt.Color(0, 0, 0));
         Volver.setText("Volver");
+        Volver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VolverActionPerformed(evt);
+            }
+        });
         getContentPane().add(Volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 440, 190, 50));
 
         TextoTitulo.setFont(new java.awt.Font("Fira Sans Condensed ExtraBold", 1, 24)); // NOI18N
@@ -96,30 +110,84 @@ public class MostrarUsuarios extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearUsuarioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_CrearUsuarioActionPerformed
-    
-    
-    private void cargarUsuariosEnTabla() {
-    List<Usuario> usuario = usuarioController.findAll();
+        CrearUsuario.addActionListener(e -> {
+            try {
+                String nombre = JOptionPane.showInputDialog(this, "Nombre del usuario:");
+                String dni = JOptionPane.showInputDialog(this, "DNI del usuario:");
+                String localidad = JOptionPane.showInputDialog(this, "Localidad del usuario:");
+                String telefono = JOptionPane.showInputDialog(this, "Teléfono del usuario:");
 
-    DefaultTableModel modelo = new DefaultTableModel();
-    modelo.setColumnIdentifiers(new String[] { "ID", "Nombre", "DNI", "Localidad", "Telefono", "Coleccion de Ventas" });
+                if (nombre == null || dni == null || localidad == null || telefono == null
+                        || nombre.isEmpty() || dni.isEmpty() || localidad.isEmpty() || telefono.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
+                    return;
+                }
 
-    for (Usuario u : usuario) {
-        modelo.addRow(new Object[] {
-            u.getCodUsuario(),
-            u.getNombreUsuario(),
-            u.getDniUsuario(),
-            u.getLocalidadUsuario(),
-            u.getTelefUsuario(),
-            (u.getVentaCollection() != null) ? u.getVentaCollection() : "Sin ventas"
+                Usuario nuevo = new Usuario();
+                nuevo.setNombreUsuario(nombre);
+                nuevo.setDniUsuario(dni);
+                nuevo.setLocalidadUsuario(localidad);
+                nuevo.setTelefUsuario(telefono);
+
+                usuarioController.create(nuevo);
+                cargarUsuariosEnTabla();
+                JOptionPane.showMessageDialog(this, "Usuario creado correctamente.");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al crear usuario.");
+            }
         });
+    }//GEN-LAST:event_CrearUsuarioActionPerformed
+
+    private void VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VolverActionPerformed
+        new Seleccion().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_VolverActionPerformed
+
+    private void BorrarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarUsuarioActionPerformed
+        BorrarUsuario.addActionListener(e -> {
+            int fila = jTable1.getSelectedRow();
+            if (fila == -1) {
+                JOptionPane.showMessageDialog(this, "Selecciona un usuario para borrar.");
+                return;
+            }
+
+            int codUsuario = (int) jTable1.getValueAt(fila, 0);
+            int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que quieres borrar el usuario " + codUsuario + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    usuarioController.delete(codUsuario);
+                    cargarUsuariosEnTabla();
+                    JOptionPane.showMessageDialog(this, "Usuario eliminado correctamente.");
+                } catch (HeadlessException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Error al eliminar usuario.");
+                }
+            }
+        });
+
+    }//GEN-LAST:event_BorrarUsuarioActionPerformed
+
+    private void cargarUsuariosEnTabla() {
+        List<Usuario> usuario = usuarioController.findAll();
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new String[]{"ID", "Nombre", "DNI", "Localidad", "Telefono", "Coleccion de Ventas"});
+
+        for (Usuario u : usuario) {
+            modelo.addRow(new Object[]{
+                u.getCodUsuario(),
+                u.getNombreUsuario(),
+                u.getDniUsuario(),
+                u.getLocalidadUsuario(),
+                u.getTelefUsuario(),
+                (u.getVentaCollection() != null) ? u.getVentaCollection() : "Sin ventas"
+            });
+        }
+
+        jTable1.setModel(modelo);
     }
 
-    jTable1.setModel(modelo);
-}
-    
     /**
      * @param args the command line arguments
      */

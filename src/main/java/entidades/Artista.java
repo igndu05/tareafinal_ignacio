@@ -37,15 +37,15 @@ public class Artista implements Serializable {
     @Basic(optional = false)
     @Column(name = "codArtista")
     private Integer codArtista;
-    
+
     @Column(name = "nomArtista")
     private String nomArtista;
-    
+
     @Column(name = "fechaNacimientoArtista")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaNacimientoArtista;
-    
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "artista")
     private Collection<Disco> discoCollection;
 
     public Artista() {
@@ -60,7 +60,7 @@ public class Artista implements Serializable {
         this.nomArtista = nomArtista;
         this.fechaNacimientoArtista = fechaNacimientoArtista;
     }
-    
+
     public Artista(Integer codArtista, String nomArtista, Date fechaNacimientoArtista, Collection<Disco> discoCollection) {
         this.codArtista = codArtista;
         this.nomArtista = nomArtista;
@@ -87,7 +87,7 @@ public class Artista implements Serializable {
     public Date getFechaNacimientoArtista() {
         return fechaNacimientoArtista;
     }
-    
+
     public LocalDateTime getFechaLocalDateTime() {
         return fechaNacimientoArtista.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
@@ -95,7 +95,7 @@ public class Artista implements Serializable {
     public void setFechaNacimientoArtista(Date fechaNacimientoArtista) {
         this.fechaNacimientoArtista = fechaNacimientoArtista;
     }
-    
+
     public void setFechaNacimientoArtista(LocalDateTime fechaNacimientoArtista) {
         // Convertir LocalDateTime a Date
         this.fechaNacimientoArtista = Date.from(fechaNacimientoArtista.atZone(ZoneId.systemDefault()).toInstant());
@@ -148,15 +148,11 @@ public class Artista implements Serializable {
 
     @Override
     public String toString() {
-        String tmp = "";
-        for (Disco disco : discoCollection) {
-            tmp+=disco+"\n";
-        }
-        return "Artista{" + "codArtista=" + codArtista + ", nomArtista=" + nomArtista + ", fechaNacimientoArtista=" + fechaNacimientoArtista + ", discoCollection=" + discoCollection + '}';
+        return "Artista{"
+                + "codArtista=" + codArtista
+                + ", nomArtista='" + nomArtista + '\''
+                + ", fechaNacimientoArtista=" + fechaNacimientoArtista
+                + ", discosCount=" + (discoCollection != null ? discoCollection.size() : 0)
+                + '}';
     }
-
-    
-    
-    
-    
 }

@@ -30,16 +30,17 @@ import javax.persistence.Table;
     @NamedQuery(name = "DetalleVenta.findById", query = "SELECT d FROM DetalleVenta d WHERE d.codDetalleVenta = :codDetalleVenta"),
     @NamedQuery(name = "DetalleVenta.findByCantidad", query = "SELECT d FROM DetalleVenta d WHERE d.cantidad = :cantidad")})
 public class DetalleVenta implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "codDetalleVenta")
     private Integer codDetalleVenta;
-    
+
     @Column(name = "cantidad")
     private Integer cantidad;
-    
+
     @JoinColumn(name = "codVenta", referencedColumnName = "codVenta")
     @ManyToOne(optional = false)
     private Venta venta;
@@ -123,7 +124,12 @@ public class DetalleVenta implements Serializable {
 
     @Override
     public String toString() {
-        return "DetalleVenta{" + "codDetalleVenta=" + codDetalleVenta + ", cantidad=" + cantidad + ", venta=" + venta.getCodVenta() + ", disco=" + disco.getCodDisco() + '}';
+        return "DetalleVenta{"
+                + "codDetalleVenta=" + codDetalleVenta
+                + ", cantidad=" + cantidad
+                + ", ventaId=" + (venta != null ? venta.getCodVenta() : "null")
+                + ", discoId=" + (disco != null ? disco.getCodDisco() : "null")
+                + '}';
     }
 
 }

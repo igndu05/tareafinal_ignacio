@@ -30,31 +30,31 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Disco.findAll", query = "SELECT d FROM Disco d"),
     @NamedQuery(name = "Disco.findById", query = "SELECT d FROM Disco d WHERE d.codDisco = :codDisco"),
     @NamedQuery(name = "Disco.findByNombre", query = "SELECT d FROM Disco d WHERE d.nomDisco = :nomDisco")})
-public class Disco implements Serializable{
-    
+public class Disco implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "codDisco")
     private Integer codDisco;
-    
+
     @Column(name = "nomDisco")
     private String nomDisco;
-    
+
     @Column(name = "fechaLanzamiento")
     @Temporal(TemporalType.DATE)
     private Date fechaLanzamiento;
-    
+
     @Column(name = "stock")
     private Integer stock;
 
-    @JoinColumn(name = "codArtista", referencedColumnName = "codArtista")
-    @ManyToOne(optional = false)
+    @ManyToOne
+    @JoinColumn(name = "codArtista")
     private Artista artista;
-    
+
     @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="codDisco")
+    @JoinColumn(name = "codDisco")
     private Collection<DetalleVenta> detalleVentaCollection;
 
     public Disco() {
@@ -98,7 +98,7 @@ public class Disco implements Serializable{
     public Date getFechaLanzamiento() {
         return fechaLanzamiento;
     }
-    
+
     public LocalDateTime getFechaLanzamientoLocalDateTime() {
         return fechaLanzamiento.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
@@ -106,7 +106,7 @@ public class Disco implements Serializable{
     public void setFechaLanzamiento(Date fechaLanzamiento) {
         this.fechaLanzamiento = fechaLanzamiento;
     }
-    
+
     public void setFechaLanzamiento(LocalDateTime fechaLanzamiento) {
         this.fechaLanzamiento = Date.from(fechaLanzamiento.atZone(ZoneId.systemDefault()).toInstant());
     }
@@ -131,7 +131,7 @@ public class Disco implements Serializable{
             detalleventa.setDisco(this);
         }
     }
-    
+
     public void addDetalleVenta(DetalleVenta detalleVenta) {
         this.detalleVentaCollection.add(detalleVenta);
         // Sincronización bidireccional con detalleVenta
@@ -186,13 +186,17 @@ public class Disco implements Serializable{
         }
         return Objects.equals(this.detalleVentaCollection, other.detalleVentaCollection);
     }
-      
+
+    @Override
     public String toString() {
-        String tmp = "";
-        for (DetalleVenta detalle : detalleVentaCollection) {
-            tmp += detalle + "\n";
-        }
-        return "Disco{" + "codDisco=" + codDisco + ", nomDisco=" + nomDisco + ", fechaLanzamiento=" + fechaLanzamiento + ", stock=" + stock + ", artista=" + artista + ", detalleVentaCollection=\n" + tmp + '}';
-    }    
-    
+        return "Disco{"
+                + "codDisco=" + codDisco
+                + ", nomDisco='" + nomDisco + '\''
+                + ", fechaLanzamiento=" + fechaLanzamiento
+                + ", stock=" + stock
+                + ", artistaId=" + (artista != null ? artista.getCodArtista() : "null")
+                + ", detalleVentaCount=" + (detalleVentaCollection != null ? detalleVentaCollection.size() : 0)
+                + '}';
+    }
+
 }

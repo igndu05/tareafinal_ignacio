@@ -7,7 +7,15 @@ package daw;
 import controladores.ArtistaController;
 import entidades.Artista;
 import entidades.Disco;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,7 +23,9 @@ import javax.swing.table.DefaultTableModel;
  * @author ignacio
  */
 public class MostrarArtistas extends javax.swing.JFrame {
+
     private ArtistaController artistaController = new ArtistaController();
+
     /**
      * Creates new form MostrarArtistas
      */
@@ -40,7 +50,7 @@ public class MostrarArtistas extends javax.swing.JFrame {
         CrearArtista = new javax.swing.JButton();
         BorrarArtista = new javax.swing.JButton();
         ActualizarArtista = new javax.swing.JButton();
-        Borrar = new javax.swing.JButton();
+        Volver = new javax.swing.JButton();
         TextoTitulo = new javax.swing.JLabel();
         Fondo = new javax.swing.JLabel();
 
@@ -62,22 +72,42 @@ public class MostrarArtistas extends javax.swing.JFrame {
         CrearArtista.setBackground(new java.awt.Color(255, 255, 255));
         CrearArtista.setForeground(new java.awt.Color(0, 0, 0));
         CrearArtista.setText("Crear Artista");
+        CrearArtista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CrearArtistaActionPerformed(evt);
+            }
+        });
         getContentPane().add(CrearArtista, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 140, 190, 50));
 
         BorrarArtista.setBackground(new java.awt.Color(255, 255, 255));
         BorrarArtista.setForeground(new java.awt.Color(0, 0, 0));
         BorrarArtista.setText("Borrar Artista");
+        BorrarArtista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BorrarArtistaActionPerformed(evt);
+            }
+        });
         getContentPane().add(BorrarArtista, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 240, 190, 50));
 
         ActualizarArtista.setBackground(new java.awt.Color(255, 255, 255));
         ActualizarArtista.setForeground(new java.awt.Color(0, 0, 0));
         ActualizarArtista.setText("Actualizar Artista");
+        ActualizarArtista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ActualizarArtistaActionPerformed(evt);
+            }
+        });
         getContentPane().add(ActualizarArtista, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 340, 190, 50));
 
-        Borrar.setBackground(new java.awt.Color(255, 255, 255));
-        Borrar.setForeground(new java.awt.Color(0, 0, 0));
-        Borrar.setText("Volver");
-        getContentPane().add(Borrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 440, 190, 50));
+        Volver.setBackground(new java.awt.Color(255, 255, 255));
+        Volver.setForeground(new java.awt.Color(0, 0, 0));
+        Volver.setText("Volver");
+        Volver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VolverActionPerformed(evt);
+            }
+        });
+        getContentPane().add(Volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 440, 190, 50));
 
         TextoTitulo.setFont(new java.awt.Font("Fira Sans Condensed ExtraBold", 1, 24)); // NOI18N
         TextoTitulo.setForeground(new java.awt.Color(255, 255, 255));
@@ -89,23 +119,109 @@ public class MostrarArtistas extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    private void cargarArtistasEnTabla() {
-    List<Artista> artistas = artistaController.findAll();
 
-    DefaultTableModel modelo = new DefaultTableModel();
-    modelo.setColumnIdentifiers(new String[] { "ID", "Nombre", "Fecha_Nacimiento" });
+    private void CrearArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearArtistaActionPerformed
+        CrearArtista.addActionListener(e -> {
+            String nombre = JOptionPane.showInputDialog(this, "Nombre del artista:");
+            if (nombre == null || nombre.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nombre no puede estar vacío.");
+                return;
+            }
 
-    for (Artista artista : artistas) {
-        modelo.addRow(new Object[] {
-            artista.getCodArtista(),
-            artista.getNomArtista(),
-            artista.getFechaNacimientoArtista()
+            String fechaStr = JOptionPane.showInputDialog(this, "Fecha de nacimiento (YYYY-MM-DD):");
+            try {
+                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+                Date fecha = formato.parse(fechaStr);
+                Artista artista = new Artista();
+                artista.setNomArtista(nombre);
+                artista.setFechaNacimientoArtista(fecha);
+
+                artistaController.create(artista);
+                cargarArtistasEnTabla();
+            } catch (DateTimeParseException ex) {
+                JOptionPane.showMessageDialog(this, "Formato de fecha inválido.");
+            } catch (ParseException ex) {
+                Logger.getLogger(MostrarArtistas.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
+    }//GEN-LAST:event_CrearArtistaActionPerformed
+
+    private void VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VolverActionPerformed
+        new Seleccion().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_VolverActionPerformed
+
+    private void BorrarArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarArtistaActionPerformed
+        BorrarArtista.addActionListener(e -> {
+            int filaSeleccionada = jTable1.getSelectedRow();
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(this, "Selecciona un artista para borrar.");
+                return;
+            }
+
+            int id = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
+            int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro que deseas eliminar este artista?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                artistaController.delete(id);
+                cargarArtistasEnTabla();
+            }
+        });
+    }//GEN-LAST:event_BorrarArtistaActionPerformed
+
+    private void ActualizarArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActualizarArtistaActionPerformed
+        ActualizarArtista.addActionListener(e -> {
+            int filaSeleccionada = jTable1.getSelectedRow();
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(this, "Selecciona un artista para actualizar.");
+                return;
+            }
+
+            int id = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
+            Artista artista = artistaController.findById(id);
+
+            if (artista != null) {
+                String nuevoNombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", artista.getNomArtista());
+                if (nuevoNombre == null || nuevoNombre.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Nombre no puede estar vacío.");
+                    return;
+                }
+
+                String nuevaFechaStr = JOptionPane.showInputDialog(this, "Nueva fecha nacimiento (YYYY-MM-DD):", artista.getFechaNacimientoArtista().toString());
+                try {
+                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+                    Date fecha = formato.parse(nuevaFechaStr);
+
+                    artista.setNomArtista(nuevoNombre);
+                    artista.setFechaNacimientoArtista(fecha);
+
+                    artistaController.update(artista);
+                    cargarArtistasEnTabla();
+                } catch (DateTimeParseException ex) {
+                    JOptionPane.showMessageDialog(this, "Formato de fecha inválido.");
+                } catch (ParseException ex) {
+                    Logger.getLogger(MostrarArtistas.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }//GEN-LAST:event_ActualizarArtistaActionPerformed
+
+    private void cargarArtistasEnTabla() {
+        List<Artista> artistas = artistaController.findAll();
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new String[]{"ID", "Nombre", "Fecha_Nacimiento"});
+
+        for (Artista artista : artistas) {
+            modelo.addRow(new Object[]{
+                artista.getCodArtista(),
+                artista.getNomArtista(),
+                artista.getFechaNacimientoArtista()
+            });
+        }
+
+        jTable1.setModel(modelo);
     }
 
-    jTable1.setModel(modelo);
-}
     /**
      * @param args the command line arguments
      */
@@ -143,11 +259,11 @@ public class MostrarArtistas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ActualizarArtista;
-    private javax.swing.JButton Borrar;
     private javax.swing.JButton BorrarArtista;
     private javax.swing.JButton CrearArtista;
     private javax.swing.JLabel Fondo;
     private javax.swing.JLabel TextoTitulo;
+    private javax.swing.JButton Volver;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
