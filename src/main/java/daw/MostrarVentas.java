@@ -11,6 +11,7 @@ import entidades.DetalleVenta;
 import entidades.Disco;
 import entidades.Usuario;
 import entidades.Venta;
+import java.awt.HeadlessException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -123,15 +124,159 @@ public class MostrarVentas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CrearVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearVentaActionPerformed
-         // TODO add your handling code here:
+        try {
+            Usuario usuario = null;
+            while (usuario == null) {
+                String inputCodUsuario = JOptionPane.showInputDialog(this, "Ingrese el código del usuario:");
+                if (inputCodUsuario == null) {
+                    return; // Cancelar
+                }
+                try {
+                    int codUsuario = Integer.parseInt(inputCodUsuario.trim());
+                    usuario = usuarioController.findById(codUsuario);
+                    if (usuario == null) {
+                        JOptionPane.showMessageDialog(this, "Usuario no encontrado. Ingrese un código existente.");
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de usuario.");
+                }
+            }
+
+            Disco disco = null;
+            while (disco == null) {
+                String inputCodDisco = JOptionPane.showInputDialog(this, "Ingrese el código del disco:");
+                if (inputCodDisco == null) {
+                    return; // Cancelar
+                }
+                try {
+                    int codDisco = Integer.parseInt(inputCodDisco.trim());
+                    disco = discoController.findById(codDisco);
+                    if (disco == null) {
+                        JOptionPane.showMessageDialog(this, "Disco no encontrado. Ingrese un código existente.");
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código del disco.");
+                }
+            }
+
+            Venta venta = new Venta();
+            venta.setFechaVenta(new Date());
+            venta.setCodUsuario(usuario);
+
+            DetalleVenta detalle = new DetalleVenta();
+            detalle.setDisco(disco);
+            // Si tu entidad DetalleVenta tiene cantidad, puedes ponerle 1:
+            // detalle.setCantidad(1);
+
+            venta.addDetalleVenta(detalle);
+            usuario.addVenta(venta);
+
+            ventaController.create(venta);
+            usuarioController.update(usuario);
+
+            JOptionPane.showMessageDialog(this, "Venta creada correctamente.");
+            cargarVentasEnTabla();
+
+        } catch (HeadlessException e) {
+            JOptionPane.showMessageDialog(this, "Error al crear venta: " + e.getMessage());
+        }
     }//GEN-LAST:event_CrearVentaActionPerformed
 
     private void BorrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarVentaActionPerformed
-        // TODO add your handling code here:
+        try {
+            Venta venta = null;
+            while (venta == null) {
+                String inputCodVenta = JOptionPane.showInputDialog(this, "Ingrese el código de la venta a borrar:");
+                if (inputCodVenta == null) {
+                    return; // Cancelar
+                }
+                try {
+                    int codVenta = Integer.parseInt(inputCodVenta.trim());
+                    venta = ventaController.findById(codVenta);
+                    if (venta == null) {
+                        JOptionPane.showMessageDialog(this, "Venta no encontrada. Ingrese un código existente.");
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de venta.");
+                }
+            }
+
+            ventaController.delete(venta.getCodVenta());
+            JOptionPane.showMessageDialog(this, "Venta borrada correctamente.");
+            cargarVentasEnTabla();
+
+        } catch (HeadlessException e) {
+            JOptionPane.showMessageDialog(this, "Error al borrar venta: " + e.getMessage());
+        }
     }//GEN-LAST:event_BorrarVentaActionPerformed
 
     private void ActualizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActualizarVentaActionPerformed
-        // TODO add your handling code here:
+        try {
+        Venta venta = null;
+        while (venta == null) {
+            String inputCodVenta = JOptionPane.showInputDialog(this, "Ingrese el código de la venta a modificar:");
+            if (inputCodVenta == null) return; // Cancelar
+            try {
+                int codVenta = Integer.parseInt(inputCodVenta.trim());
+                venta = ventaController.findById(codVenta);
+                if (venta == null) {
+                    JOptionPane.showMessageDialog(this, "Venta no encontrada. Ingrese un código existente.");
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de venta.");
+            }
+        }
+
+        Usuario usuario = null;
+        while (usuario == null) {
+            String inputCodUsuario = JOptionPane.showInputDialog(this, "Ingrese el nuevo código del usuario:");
+            if (inputCodUsuario == null) return; // Cancelar
+            try {
+                int codUsuario = Integer.parseInt(inputCodUsuario.trim());
+                usuario = usuarioController.findById(codUsuario);
+                if (usuario == null) {
+                    JOptionPane.showMessageDialog(this, "Usuario no encontrado. Ingrese un código existente.");
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de usuario.");
+            }
+        }
+
+        Disco disco = null;
+        while (disco == null) {
+            String inputCodDisco = JOptionPane.showInputDialog(this, "Ingrese el nuevo código del disco:");
+            if (inputCodDisco == null) return; // Cancelar
+            try {
+                int codDisco = Integer.parseInt(inputCodDisco.trim());
+                disco = discoController.findById(codDisco);
+                if (disco == null) {
+                    JOptionPane.showMessageDialog(this, "Disco no encontrado. Ingrese un código existente.");
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código del disco.");
+            }
+        }
+
+        // Actualizamos la venta
+        venta.setCodUsuario(usuario);
+        venta.setFechaVenta(new Date());
+
+        // Limpiamos detalles antiguos y agregamos el nuevo detalle con el disco
+        venta.getDetalleVentaCollection().clear();
+
+        DetalleVenta detalle = new DetalleVenta();
+        detalle.setDisco(disco);
+        // detalle.setCantidad(1); // si tienes cantidad
+
+        venta.addDetalleVenta(detalle);
+
+        ventaController.update(venta);
+        JOptionPane.showMessageDialog(this, "Venta actualizada correctamente.");
+        cargarVentasEnTabla();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al actualizar venta: " + e.getMessage());
+    }
     }//GEN-LAST:event_ActualizarVentaActionPerformed
 
     private void VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VolverActionPerformed
