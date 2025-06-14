@@ -4,11 +4,29 @@
  */
 package daw;
 
+import controladores.DiscoController;
+import controladores.UsuarioController;
+import controladores.VentaController;
+import entidades.DetalleVenta;
+import entidades.Disco;
+import entidades.Usuario;
+import entidades.Venta;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ignacio
  */
 public class MostrarVentas extends javax.swing.JFrame {
+
+    private VentaController ventaController = new VentaController();
+    private DiscoController discoController = new DiscoController();
+    private UsuarioController usuarioController = new UsuarioController();
 
     /**
      * Creates new form MostrarVentas
@@ -17,6 +35,7 @@ public class MostrarVentas extends javax.swing.JFrame {
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);
+        cargarVentasEnTabla();
     }
 
     /**
@@ -55,21 +74,41 @@ public class MostrarVentas extends javax.swing.JFrame {
         CrearVenta.setBackground(new java.awt.Color(255, 255, 255));
         CrearVenta.setForeground(new java.awt.Color(0, 0, 0));
         CrearVenta.setText("Crear Venta");
+        CrearVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CrearVentaActionPerformed(evt);
+            }
+        });
         getContentPane().add(CrearVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 140, 190, 50));
 
         BorrarVenta.setBackground(new java.awt.Color(255, 255, 255));
         BorrarVenta.setForeground(new java.awt.Color(0, 0, 0));
         BorrarVenta.setText("Borrar Venta");
+        BorrarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BorrarVentaActionPerformed(evt);
+            }
+        });
         getContentPane().add(BorrarVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 240, 190, 50));
 
         ActualizarVenta.setBackground(new java.awt.Color(255, 255, 255));
         ActualizarVenta.setForeground(new java.awt.Color(0, 0, 0));
         ActualizarVenta.setText("Actualizar Venta");
+        ActualizarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ActualizarVentaActionPerformed(evt);
+            }
+        });
         getContentPane().add(ActualizarVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 340, 190, 50));
 
         Volver.setBackground(new java.awt.Color(255, 255, 255));
         Volver.setForeground(new java.awt.Color(0, 0, 0));
         Volver.setText("Volver");
+        Volver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VolverActionPerformed(evt);
+            }
+        });
         getContentPane().add(Volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 440, 190, 50));
 
         TextoTitulo.setFont(new java.awt.Font("Fira Sans Condensed ExtraBold", 1, 24)); // NOI18N
@@ -82,6 +121,40 @@ public class MostrarVentas extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void CrearVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearVentaActionPerformed
+         // TODO add your handling code here:
+    }//GEN-LAST:event_CrearVentaActionPerformed
+
+    private void BorrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarVentaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BorrarVentaActionPerformed
+
+    private void ActualizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActualizarVentaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ActualizarVentaActionPerformed
+
+    private void VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VolverActionPerformed
+        new Seleccion().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_VolverActionPerformed
+
+    private void cargarVentasEnTabla() {
+        List<Venta> ventas = ventaController.findAll();
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new String[]{"ID", "Usuario", "Fecha"});
+
+        for (Venta venta : ventas) {
+            modelo.addRow(new Object[]{
+                venta.getCodVenta(),
+                venta.getCodUsuario().getNombreUsuario(),
+                new SimpleDateFormat("dd/MM/yyyy").format(venta.getFechaVenta())
+            });
+        }
+
+        jTable1.setModel(modelo);
+    }
 
     /**
      * @param args the command line arguments

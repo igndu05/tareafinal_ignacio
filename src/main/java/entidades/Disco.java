@@ -46,9 +46,6 @@ public class Disco implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaLanzamiento;
 
-    @Column(name = "stock")
-    private Integer stock;
-
     @ManyToOne
     @JoinColumn(name = "codArtista")
     private Artista artista;
@@ -85,14 +82,6 @@ public class Disco implements Serializable {
 
     public void setNomDisco(String nomDisco) {
         this.nomDisco = nomDisco;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
     }
 
     public Date getFechaLanzamiento() {
@@ -151,7 +140,6 @@ public class Disco implements Serializable {
         hash = 59 * hash + Objects.hashCode(this.codDisco);
         hash = 59 * hash + Objects.hashCode(this.nomDisco);
         hash = 59 * hash + Objects.hashCode(this.fechaLanzamiento);
-        hash = 59 * hash + this.stock;
         hash = 59 * hash + Objects.hashCode(this.artista);
         hash = 59 * hash + Objects.hashCode(this.detalleVentaCollection);
         return hash;
@@ -169,9 +157,6 @@ public class Disco implements Serializable {
             return false;
         }
         final Disco other = (Disco) obj;
-        if (this.stock != other.stock) {
-            return false;
-        }
         if (!Objects.equals(this.nomDisco, other.nomDisco)) {
             return false;
         }
@@ -193,7 +178,6 @@ public class Disco implements Serializable {
                 + "codDisco=" + codDisco
                 + ", nomDisco='" + nomDisco + '\''
                 + ", fechaLanzamiento=" + fechaLanzamiento
-                + ", stock=" + stock
                 + ", artistaId=" + (artista != null ? artista.getCodArtista() : "null")
                 + ", detalleVentaCount=" + (detalleVentaCollection != null ? detalleVentaCollection.size() : 0)
                 + '}';

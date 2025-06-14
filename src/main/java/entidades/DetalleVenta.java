@@ -38,9 +38,6 @@ public class DetalleVenta implements Serializable {
     @Column(name = "codDetalleVenta")
     private Integer codDetalleVenta;
 
-    @Column(name = "cantidad")
-    private Integer cantidad;
-
     @JoinColumn(name = "codVenta", referencedColumnName = "codVenta")
     @ManyToOne(optional = false)
     private Venta venta;
@@ -64,14 +61,6 @@ public class DetalleVenta implements Serializable {
         this.codDetalleVenta = codDetalleVenta;
     }
 
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
-    }
-
     public Venta getVenta() {
         return venta;
     }
@@ -92,7 +81,6 @@ public class DetalleVenta implements Serializable {
     public int hashCode() {
         int hash = 7;
         hash = 37 * hash + Objects.hashCode(this.codDetalleVenta);
-        hash = 37 * hash + this.cantidad;
         hash = 37 * hash + Objects.hashCode(this.venta);
         hash = 37 * hash + Objects.hashCode(this.disco);
         return hash;
@@ -110,9 +98,6 @@ public class DetalleVenta implements Serializable {
             return false;
         }
         final DetalleVenta other = (DetalleVenta) obj;
-        if (this.cantidad != other.cantidad) {
-            return false;
-        }
         if (!Objects.equals(this.codDetalleVenta, other.codDetalleVenta)) {
             return false;
         }
@@ -126,7 +111,6 @@ public class DetalleVenta implements Serializable {
     public String toString() {
         return "DetalleVenta{"
                 + "codDetalleVenta=" + codDetalleVenta
-                + ", cantidad=" + cantidad
                 + ", ventaId=" + (venta != null ? venta.getCodVenta() : "null")
                 + ", discoId=" + (disco != null ? disco.getCodDisco() : "null")
                 + '}';

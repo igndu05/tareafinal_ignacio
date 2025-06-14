@@ -144,15 +144,6 @@ public class MostrarDiscos extends javax.swing.JFrame {
                 return;
             }
 
-            String stockStr = JOptionPane.showInputDialog(this, "Stock (número entero):");
-            int stock;
-            try {
-                stock = Integer.parseInt(stockStr);
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Stock debe ser un número entero.");
-                return;
-            }
-
             String artistaIdStr = JOptionPane.showInputDialog(this, "ID del artista asociado:");
             int artistaId;
             try {
@@ -171,7 +162,6 @@ public class MostrarDiscos extends javax.swing.JFrame {
             Disco disco = new Disco();
             disco.setNomDisco(nombre);
             disco.setFechaLanzamiento(fechaLanzamiento);
-            disco.setStock(stock);
             disco.setCodArtista(artista);
 
             discoController.create(disco);
@@ -224,15 +214,6 @@ public class MostrarDiscos extends javax.swing.JFrame {
                     return;
                 }
 
-                String nuevoStockStr = JOptionPane.showInputDialog(this, "Nuevo stock:", Integer.toString(disco.getStock()));
-                int nuevoStock;
-                try {
-                    nuevoStock = Integer.parseInt(nuevoStockStr);
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Stock debe ser un número entero.");
-                    return;
-                }
-
                 String nuevoArtistaIdStr = JOptionPane.showInputDialog(this, "Nuevo ID artista:", disco.getCodArtista() != null ? Integer.toString(disco.getCodArtista().getCodArtista()) : "");
                 int nuevoArtistaId;
                 try {
@@ -250,7 +231,6 @@ public class MostrarDiscos extends javax.swing.JFrame {
 
                 disco.setNomDisco(nuevoNombre);
                 disco.setFechaLanzamiento(nuevaFecha);
-                disco.setStock(nuevoStock);
                 disco.setCodArtista(nuevoArtista);
 
                 discoController.update(disco);
