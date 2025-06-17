@@ -165,8 +165,6 @@ public class MostrarVentas extends javax.swing.JFrame {
 
             DetalleVenta detalle = new DetalleVenta();
             detalle.setDisco(disco);
-            // Si tu entidad DetalleVenta tiene cantidad, puedes ponerle 1:
-            // detalle.setCantidad(1);
 
             venta.addDetalleVenta(detalle);
             usuario.addVenta(venta);

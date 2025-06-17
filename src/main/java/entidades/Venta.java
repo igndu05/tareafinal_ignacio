@@ -23,6 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -44,7 +45,7 @@ public class Venta implements Serializable {
     @Basic(optional = false)
     @Column(name = "codVenta")
     private Integer codVenta;
-    
+
     @Column(name = "fechaVenta")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaVenta;
@@ -115,11 +116,13 @@ public class Venta implements Serializable {
             d.setVenta(this);
         }
     }
-    
+
     public void addDetalleVenta(DetalleVenta detalleVenta) {
-        this.detalleVentaCollection.add(detalleVenta);
-        // Sincronización bidireccional con detalleVenta
-        detalleVenta.setVenta(this);
+        if (detalleVentaCollection == null) {
+            detalleVentaCollection = new ArrayList<>();
+        }
+        detalleVenta.setVenta(this); // Muy importante
+        detalleVentaCollection.add(detalleVenta);
     }
 
     public void removeDetalleVenta(DetalleVenta detalleVenta) {
@@ -163,7 +166,7 @@ public class Venta implements Serializable {
         return Objects.equals(this.detalleVentaCollection, other.detalleVentaCollection);
     }
 
-     @Override
+    @Override
     public String toString() {
         String tmp = "";
         for (DetalleVenta detalle : detalleVentaCollection) {
@@ -172,7 +175,5 @@ public class Venta implements Serializable {
         return "Venta{" + "id=" + codVenta + ", fecha=" + fechaVenta + ", idUsuario=" + usuario.getCodUsuario()
                 + ", detalleventaCollection=\n" + tmp + '}';
     }
-    
-    
-    
+
 }
