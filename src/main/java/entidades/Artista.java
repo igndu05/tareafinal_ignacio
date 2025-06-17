@@ -3,6 +3,7 @@ package entidades;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -42,7 +43,7 @@ public class Artista implements Serializable {
     private String nomArtista;
 
     @Column(name = "fechaNacimientoArtista")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date fechaNacimientoArtista;
 
     @OneToMany(mappedBy = "artista")
@@ -99,6 +100,11 @@ public class Artista implements Serializable {
     public void setFechaNacimientoArtista(LocalDateTime fechaNacimientoArtista) {
         // Convertir LocalDateTime a Date
         this.fechaNacimientoArtista = Date.from(fechaNacimientoArtista.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    
+    public String getFechaFormateada() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    return getFechaLocalDateTime().format(formatter);
     }
 
     public Collection<Disco> getDiscoCollection() {

@@ -186,7 +186,7 @@ public class MostrarArtistas extends javax.swing.JFrame {
                     return;
                 }
 
-                String nuevaFechaStr = JOptionPane.showInputDialog(this, "Nueva fecha nacimiento (YYYY-MM-DD):", artista.getFechaNacimientoArtista().toString());
+                String nuevaFechaStr = JOptionPane.showInputDialog(null, "Inserte la nueva fecha (YYYY-MM-DD)");
                 try {
                     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
                     Date fecha = formato.parse(nuevaFechaStr);
@@ -215,7 +215,7 @@ public class MostrarArtistas extends javax.swing.JFrame {
             modelo.addRow(new Object[]{
                 artista.getCodArtista(),
                 artista.getNomArtista(),
-                artista.getFechaNacimientoArtista()
+                artista.getFechaFormateada()
             });
         }
 
