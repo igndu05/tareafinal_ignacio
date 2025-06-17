@@ -162,7 +162,7 @@ public class MostrarDiscos extends javax.swing.JFrame {
             Disco disco = new Disco();
             disco.setNomDisco(nombre);
             disco.setFechaLanzamiento(fechaLanzamiento);
-            disco.setCodArtista(artista);
+            disco.setArtista(artista);
 
             discoController.create(disco);
             cargarDiscosEnTabla();
@@ -178,10 +178,23 @@ public class MostrarDiscos extends javax.swing.JFrame {
             }
 
             int id = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
-            int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro que deseas eliminar este disco?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            Disco disco = discoController.findById(id);
+
+            // Verificar si el disco está asociado a ventas
+            if (disco != null && !disco.getDetalleVentaCollection().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No puedes eliminar este disco porque está asociado a una venta. "
+                        + "Primero elimina sus registros en ventas.");
+                return;
+            }
+
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "¿Estás seguro que deseas eliminar este disco?", "Confirmar", JOptionPane.YES_NO_OPTION);
+
             if (confirm == JOptionPane.YES_OPTION) {
                 discoController.delete(id);
                 cargarDiscosEnTabla();
+                JOptionPane.showMessageDialog(this, "Disco eliminado correctamente.");
             }
         });
     }//GEN-LAST:event_BorrarDiscoActionPerformed
@@ -200,26 +213,34 @@ public class MostrarDiscos extends javax.swing.JFrame {
             if (disco != null) {
                 String nuevoNombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", disco.getNomDisco());
                 if (nuevoNombre == null || nuevoNombre.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Nombre no puede estar vacío.");
+                    JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.");
                     return;
                 }
 
-                String nuevaFechaStr = JOptionPane.showInputDialog(this, "Nueva fecha lanzamiento (YYYY-MM-DD):", new SimpleDateFormat("yyyy-MM-dd").format(disco.getFechaLanzamiento()));
+                // Validar fecha de lanzamiento
+                String nuevaFechaStr = JOptionPane.showInputDialog(null, "Inserte la nueva fecha (YYYY-MM-DD)");
                 Date nuevaFecha;
                 try {
                     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+                    formato.setLenient(false); // Evita fechas incorrectas como "2025-13-32"
                     nuevaFecha = formato.parse(nuevaFechaStr);
                 } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(this, "Formato de fecha inválido.");
+                    JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Usa YYYY-MM-DD.");
                     return;
                 }
 
-                String nuevoArtistaIdStr = JOptionPane.showInputDialog(this, "Nuevo ID artista:", disco.getCodArtista() != null ? Integer.toString(disco.getCodArtista().getCodArtista()) : "");
+                // Validar ID del artista
+                String nuevoArtistaIdStr = JOptionPane.showInputDialog(this, "Nuevo ID artista:", disco.getArtista() != null ? Integer.toString(disco.getArtista().getCodArtista()) : "");
+                if (nuevoArtistaIdStr == null || nuevoArtistaIdStr.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "El ID de artista no puede estar vacío.");
+                    return;
+                }
+
                 int nuevoArtistaId;
                 try {
                     nuevoArtistaId = Integer.parseInt(nuevoArtistaIdStr);
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "ID artista debe ser un número entero.");
+                    JOptionPane.showMessageDialog(this, "El ID de artista debe ser un número entero.");
                     return;
                 }
 
@@ -229,12 +250,16 @@ public class MostrarDiscos extends javax.swing.JFrame {
                     return;
                 }
 
+                // Actualizar disco con los nuevos valores
                 disco.setNomDisco(nuevoNombre);
                 disco.setFechaLanzamiento(nuevaFecha);
-                disco.setCodArtista(nuevoArtista);
+                disco.setArtista(nuevoArtista);
 
                 discoController.update(disco);
                 cargarDiscosEnTabla();
+                JOptionPane.showMessageDialog(this, "Disco actualizado correctamente.");
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró el disco con el ID especificado.");
             }
         });
     }//GEN-LAST:event_ActualizarDiscoActionPerformed
@@ -249,9 +274,10 @@ public class MostrarDiscos extends javax.swing.JFrame {
             modelo.addRow(new Object[]{
                 disco.getCodDisco(),
                 disco.getNomDisco(),
-                disco.getFechaLanzamiento(),
-                disco.getCodArtista() != null ? disco.getCodArtista() + " - " + disco.getCodArtista().getNomArtista() : "N/A"
+                disco.getFechaLanzamiento() != null ? disco.getFechaFormateada() : "No disponible",
+                disco.getArtista() != null ? disco.getArtista().getNomArtista() : "N/A"
             });
+
         }
 
         jTable1.setModel(modelo);

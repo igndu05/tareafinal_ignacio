@@ -3,6 +3,7 @@ package entidades;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -46,7 +47,7 @@ public class Disco implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaLanzamiento;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "codArtista")
     private Artista artista;
 
@@ -92,6 +93,11 @@ public class Disco implements Serializable {
         return fechaLanzamiento.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
+    public String getFechaFormateada() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return getFechaLanzamientoLocalDateTime().format(formatter);
+    }
+
     public void setFechaLanzamiento(Date fechaLanzamiento) {
         this.fechaLanzamiento = fechaLanzamiento;
     }
@@ -100,12 +106,12 @@ public class Disco implements Serializable {
         this.fechaLanzamiento = Date.from(fechaLanzamiento.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public Artista getCodArtista() {
+    public Artista getArtista() {
         return artista;
     }
 
-    public void setCodArtista(Artista codArtista) {
-        this.artista = codArtista;
+    public void setArtista(Artista artista) {
+        this.artista = artista;
     }
 
     public Collection<DetalleVenta> getDetalleVentaCollection() {

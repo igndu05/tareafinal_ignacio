@@ -7,6 +7,7 @@ package entidades;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -86,7 +87,12 @@ public class Venta implements Serializable {
     public LocalDateTime getFechaLocalDateTime() {
         return fechaVenta.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
-
+    
+    public String getFechaFormateada() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    return getFechaLocalDateTime().format(formatter);
+    }
+    
     public void setFechaVenta(Date fechaVenta) {
         this.fechaVenta = fechaVenta;
     }

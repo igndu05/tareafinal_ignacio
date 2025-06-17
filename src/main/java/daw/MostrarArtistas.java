@@ -160,10 +160,23 @@ public class MostrarArtistas extends javax.swing.JFrame {
             }
 
             int id = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
-            int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro que deseas eliminar este artista?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            Artista artista = artistaController.findById(id);
+
+            // Verificar si el artista tiene discos asociados antes de eliminarlo
+            if (artista != null && !artista.getDiscoCollection().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No puedes eliminar este artista porque tiene discos asociados. "
+                        + "Primero elimina los discos o reasígnalos a otro artista.");
+                return;
+            }
+
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "¿Estás seguro que deseas eliminar este artista?", "Confirmar", JOptionPane.YES_NO_OPTION);
+
             if (confirm == JOptionPane.YES_OPTION) {
                 artistaController.delete(id);
                 cargarArtistasEnTabla();
+                JOptionPane.showMessageDialog(this, "Artista eliminado correctamente.");
             }
         });
     }//GEN-LAST:event_BorrarArtistaActionPerformed
@@ -188,12 +201,16 @@ public class MostrarArtistas extends javax.swing.JFrame {
 
                 String nuevaFechaStr = JOptionPane.showInputDialog(null, "Inserte la nueva fecha (YYYY-MM-DD)");
                 try {
+                    if (nuevaFechaStr == null || nuevaFechaStr.trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "La fecha no puede estar vacía.");
+                        return;
+                    }
+
                     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+                    formato.setLenient(false); // Evita entradas inválidas como "2025-13-32"
                     Date fecha = formato.parse(nuevaFechaStr);
 
-                    artista.setNomArtista(nuevoNombre);
                     artista.setFechaNacimientoArtista(fecha);
-
                     artistaController.update(artista);
                     cargarArtistasEnTabla();
                 } catch (DateTimeParseException ex) {
@@ -215,7 +232,7 @@ public class MostrarArtistas extends javax.swing.JFrame {
             modelo.addRow(new Object[]{
                 artista.getCodArtista(),
                 artista.getNomArtista(),
-                artista.getFechaFormateada()
+                artista.getFechaNacimientoArtista() != null ? artista.getFechaFormateada() : "No disponible"
             });
         }
 
