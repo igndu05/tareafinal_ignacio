@@ -4,6 +4,8 @@
  */
 package controladores;
 
+import entidades.DetalleVenta;
+import entidades.Usuario;
 import entidades.Venta;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -16,6 +18,7 @@ import javax.persistence.Persistence;
  * @author ignacio
  */
 public class VentaController {
+
     private final EntityManagerFactory emf;
 
     public VentaController() {
@@ -29,16 +32,24 @@ public class VentaController {
 
     /**
      * Crea una nueva venta en la base de datos.
+     *
      * @param venta La venta a crear.
      */
     public void create(Venta venta) {
         EntityManager em = getEntityManager();
         EntityTransaction tx = em.getTransaction();
+
         try {
             tx.begin();
+
+            // Asociar la venta al usuario sin persistir el usuario nuevamente
+            Usuario usuario = em.find(Usuario.class, venta.getCodUsuario().getCodUsuario());
+            venta.setCodUsuario(usuario);
+
             em.persist(venta);
+
             tx.commit();
-            
+
         } catch (Exception ex) {
             if (tx.isActive()) {
                 tx.rollback();
@@ -51,6 +62,7 @@ public class VentaController {
 
     /**
      * Busca una venta por su ID.
+     *
      * @param id El ID de la venta.
      * @return La venta encontrada o null si no existe.
      */
@@ -65,6 +77,7 @@ public class VentaController {
 
     /**
      * Obtiene todas las ventas de la base de datos.
+     *
      * @return Una lista de ventas.
      */
     public List<Venta> findAll() {
@@ -78,6 +91,7 @@ public class VentaController {
 
     /**
      * Actualiza una venta existente.
+     *
      * @param venta La venta a actualizar.
      */
     public void update(Venta venta) {
@@ -99,6 +113,7 @@ public class VentaController {
 
     /**
      * Elimina una venta de la base de datos.
+     *
      * @param id El ID de la venta a eliminar.
      */
     public void delete(Integer id) {
@@ -121,7 +136,7 @@ public class VentaController {
         }
     }
 
-     public void deleteAll() {
+    public void deleteAll() {
         EntityManager em = getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -138,6 +153,7 @@ public class VentaController {
             em.close();
         }
     }
+
     /**
      * Cierra el EntityManagerFactory cuando ya no se necesita.
      */
@@ -146,8 +162,8 @@ public class VentaController {
             emf.close();
         }
     }
-    
-    public void sincronizar(){
+
+    public void sincronizar() {
         getEntityManager().flush();
     }
 }

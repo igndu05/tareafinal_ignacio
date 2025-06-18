@@ -50,13 +50,12 @@ public class Venta implements Serializable {
     @Column(name = "fechaVenta")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaVenta;
-
-    @JoinColumn(name = "codUsuario", referencedColumnName = "codUsuario")
+    
     @ManyToOne(optional = false)
+    @JoinColumn(name = "codUsuario", nullable = false)   
     private Usuario usuario;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "codVenta")
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private Collection<DetalleVenta> detalleVentaCollection;
 
     public Venta() {

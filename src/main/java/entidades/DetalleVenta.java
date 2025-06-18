@@ -36,13 +36,13 @@ public class DetalleVenta implements Serializable {
     @Basic(optional = false)
     @Column(name = "codDetalleVenta")
     private Integer codDetalleVenta;
-
-    @JoinColumn(name = "codVenta", referencedColumnName = "codVenta")
-    @ManyToOne(optional = false)
+    
+    @ManyToOne()
+    @JoinColumn(name = "codVenta")
     private Venta venta;
-
-    @JoinColumn(name = "codDisco", referencedColumnName = "codDisco")
-    @ManyToOne(optional = false)
+    
+    @ManyToOne()
+    @JoinColumn(name = "codDisco")
     private Disco disco;
 
     public DetalleVenta() {

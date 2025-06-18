@@ -15,7 +15,10 @@ import java.awt.HeadlessException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -125,57 +128,66 @@ public class MostrarVentas extends javax.swing.JFrame {
 
     private void CrearVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearVentaActionPerformed
         try {
-            Usuario usuario = null;
-            while (usuario == null) {
-                String inputCodUsuario = JOptionPane.showInputDialog(this, "Ingrese el código del usuario:");
-                if (inputCodUsuario == null) {
-                    return; // Cancelar
-                }
-                try {
-                    int codUsuario = Integer.parseInt(inputCodUsuario.trim());
-                    usuario = usuarioController.findById(codUsuario);
-                    if (usuario == null) {
-                        JOptionPane.showMessageDialog(this, "Usuario no encontrado. Ingrese un código existente.");
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de usuario.");
-                }
+            // Obtener lista de usuarios
+            List<Usuario> usuarios = usuarioController.findAll();
+            if (usuarios.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay usuarios registrados.");
+                return;
             }
 
-            Disco disco = null;
-            while (disco == null) {
-                String inputCodDisco = JOptionPane.showInputDialog(this, "Ingrese el código del disco:");
-                if (inputCodDisco == null) {
-                    return; // Cancelar
-                }
-                try {
-                    int codDisco = Integer.parseInt(inputCodDisco.trim());
-                    disco = discoController.findById(codDisco);
-                    if (disco == null) {
-                        JOptionPane.showMessageDialog(this, "Disco no encontrado. Ingrese un código existente.");
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código del disco.");
-                }
+            // Crear JComboBox para usuarios
+            JComboBox<String> comboUsuarios = new JComboBox<>();
+            Map<String, Usuario> mapaUsuarios = new HashMap<>();
+            for (Usuario usuario : usuarios) {
+                String opcion = "(" + usuario.getCodUsuario() + ") - " + usuario.getNombreUsuario();
+                comboUsuarios.addItem(opcion);
+                mapaUsuarios.put(opcion, usuario);
             }
 
+            int opcionUsuario = JOptionPane.showConfirmDialog(this, comboUsuarios, "Selecciona un usuario", JOptionPane.OK_CANCEL_OPTION);
+            if (opcionUsuario != JOptionPane.OK_OPTION) {
+                return;
+            }
+            Usuario usuarioSeleccionado = mapaUsuarios.get(comboUsuarios.getSelectedItem());
+
+            // Obtener lista de discos
+            List<Disco> discos = discoController.findAll();
+            if (discos.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay discos registrados.");
+                return;
+            }
+
+            // Crear JComboBox para discos
+            JComboBox<String> comboDiscos = new JComboBox<>();
+            Map<String, Disco> mapaDiscos = new HashMap<>();
+            for (Disco disco : discos) {
+                String opcion = "(" + disco.getCodDisco() + ") - " + disco.getNomDisco();
+                comboDiscos.addItem(opcion);
+                mapaDiscos.put(opcion, disco);
+            }
+
+            int opcionDisco = JOptionPane.showConfirmDialog(this, comboDiscos, "Selecciona un disco", JOptionPane.OK_CANCEL_OPTION);
+            if (opcionDisco != JOptionPane.OK_OPTION) {
+                return;
+            }
+            Disco discoSeleccionado = mapaDiscos.get(comboDiscos.getSelectedItem());
+
+            // Crear la venta sin modificar el usuario
             Venta venta = new Venta();
             venta.setFechaVenta(new Date());
-            venta.setCodUsuario(usuario);
+            venta.setCodUsuario(usuarioSeleccionado);
 
             DetalleVenta detalle = new DetalleVenta();
-            detalle.setDisco(disco);
-
+            detalle.setDisco(discoSeleccionado);
             venta.addDetalleVenta(detalle);
-            usuario.addVenta(venta);
 
+            // Persistir solo la venta (No modificar el usuario)
             ventaController.create(venta);
-            usuarioController.update(usuario);
 
             JOptionPane.showMessageDialog(this, "Venta creada correctamente.");
             cargarVentasEnTabla();
 
-        } catch (HeadlessException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al crear venta: " + e.getMessage());
         }
     }//GEN-LAST:event_CrearVentaActionPerformed
@@ -210,71 +222,77 @@ public class MostrarVentas extends javax.swing.JFrame {
 
     private void ActualizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActualizarVentaActionPerformed
         try {
-        Venta venta = null;
-        while (venta == null) {
-            String inputCodVenta = JOptionPane.showInputDialog(this, "Ingrese el código de la venta a modificar:");
-            if (inputCodVenta == null) return; // Cancelar
-            try {
-                int codVenta = Integer.parseInt(inputCodVenta.trim());
-                venta = ventaController.findById(codVenta);
-                if (venta == null) {
-                    JOptionPane.showMessageDialog(this, "Venta no encontrada. Ingrese un código existente.");
+            Venta venta = null;
+            while (venta == null) {
+                String inputCodVenta = JOptionPane.showInputDialog(this, "Ingrese el código de la venta a modificar:");
+                if (inputCodVenta == null) {
+                    return; // Cancelar
                 }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de venta.");
-            }
-        }
-
-        Usuario usuario = null;
-        while (usuario == null) {
-            String inputCodUsuario = JOptionPane.showInputDialog(this, "Ingrese el nuevo código del usuario:");
-            if (inputCodUsuario == null) return; // Cancelar
-            try {
-                int codUsuario = Integer.parseInt(inputCodUsuario.trim());
-                usuario = usuarioController.findById(codUsuario);
-                if (usuario == null) {
-                    JOptionPane.showMessageDialog(this, "Usuario no encontrado. Ingrese un código existente.");
+                try {
+                    int codVenta = Integer.parseInt(inputCodVenta.trim());
+                    venta = ventaController.findById(codVenta);
+                    if (venta == null) {
+                        JOptionPane.showMessageDialog(this, "Venta no encontrada. Ingrese un código existente.");
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de venta.");
                 }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de usuario.");
             }
-        }
 
-        Disco disco = null;
-        while (disco == null) {
-            String inputCodDisco = JOptionPane.showInputDialog(this, "Ingrese el nuevo código del disco:");
-            if (inputCodDisco == null) return; // Cancelar
-            try {
-                int codDisco = Integer.parseInt(inputCodDisco.trim());
-                disco = discoController.findById(codDisco);
-                if (disco == null) {
-                    JOptionPane.showMessageDialog(this, "Disco no encontrado. Ingrese un código existente.");
+            Usuario usuario = null;
+            while (usuario == null) {
+                String inputCodUsuario = JOptionPane.showInputDialog(this, "Ingrese el nuevo código del usuario:");
+                if (inputCodUsuario == null) {
+                    return; // Cancelar
                 }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código del disco.");
+                try {
+                    int codUsuario = Integer.parseInt(inputCodUsuario.trim());
+                    usuario = usuarioController.findById(codUsuario);
+                    if (usuario == null) {
+                        JOptionPane.showMessageDialog(this, "Usuario no encontrado. Ingrese un código existente.");
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de usuario.");
+                }
             }
+
+            Disco disco = null;
+            while (disco == null) {
+                String inputCodDisco = JOptionPane.showInputDialog(this, "Ingrese el nuevo código del disco:");
+                if (inputCodDisco == null) {
+                    return; // Cancelar
+                }
+                try {
+                    int codDisco = Integer.parseInt(inputCodDisco.trim());
+                    disco = discoController.findById(codDisco);
+                    if (disco == null) {
+                        JOptionPane.showMessageDialog(this, "Disco no encontrado. Ingrese un código existente.");
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código del disco.");
+                }
+            }
+
+            // Actualizamos la venta
+            venta.setCodUsuario(usuario);
+            venta.setFechaVenta(new Date());
+
+            // Limpiamos detalles antiguos y agregamos el nuevo detalle con el disco
+            venta.getDetalleVentaCollection().clear();
+
+            DetalleVenta detalle = new DetalleVenta();
+            detalle.setDisco(disco);
+            // detalle.setCantidad(1); // si tienes cantidad
+
+            venta.addDetalleVenta(detalle);
+
+            ventaController.update(venta);
+            JOptionPane.showMessageDialog(this, "Venta actualizada correctamente.");
+            cargarVentasEnTabla();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al actualizar venta: " + e.getMessage());
         }
-
-        // Actualizamos la venta
-        venta.setCodUsuario(usuario);
-        venta.setFechaVenta(new Date());
-
-        // Limpiamos detalles antiguos y agregamos el nuevo detalle con el disco
-        venta.getDetalleVentaCollection().clear();
-
-        DetalleVenta detalle = new DetalleVenta();
-        detalle.setDisco(disco);
-        // detalle.setCantidad(1); // si tienes cantidad
-
-        venta.addDetalleVenta(detalle);
-
-        ventaController.update(venta);
-        JOptionPane.showMessageDialog(this, "Venta actualizada correctamente.");
-        cargarVentasEnTabla();
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error al actualizar venta: " + e.getMessage());
-    }
     }//GEN-LAST:event_ActualizarVentaActionPerformed
 
     private void VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VolverActionPerformed

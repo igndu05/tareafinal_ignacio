@@ -46,7 +46,7 @@ public class Artista implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaNacimientoArtista;
 
-    @OneToMany(mappedBy = "artista", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "artista", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Disco> discoCollection;
 
     public Artista() {
@@ -121,6 +121,11 @@ public class Artista implements Serializable {
     public void addDisco(Disco disco){
         this.discoCollection.add(disco);
         disco.setArtista(this);
+    }
+    
+    public void removeDisco(Disco disco) {
+        this.discoCollection.remove(disco);
+        disco.setArtista(null);
     }
 
     @Override

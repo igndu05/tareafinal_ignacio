@@ -22,7 +22,7 @@ import javax.persistence.Table;
 @Table(name = "usuario")
 
 @NamedQueries({
-    @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
+    @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u LEFT JOIN FETCH u.ventaCollection"),
     @NamedQuery(name = "Usuario.findById", query = "SELECT u FROM Usuario u WHERE u.codUsuario = :codUsuario"),
     @NamedQuery(name = "Usuario.findByNombre", query = "SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombreUsuario")
     })
@@ -50,8 +50,7 @@ public class Usuario implements Serializable {
     @Column(name = "telefUsuario")
     private String telefUsuario;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "codUsuario")
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Venta> ventaCollection;
 
     // Constructores

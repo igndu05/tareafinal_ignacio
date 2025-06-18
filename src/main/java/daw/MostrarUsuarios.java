@@ -9,8 +9,10 @@ import entidades.Disco;
 import entidades.Usuario;
 import java.awt.HeadlessException;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.hibernate.Hibernate;
 
 /**
  *
@@ -86,6 +88,11 @@ public class MostrarUsuarios extends javax.swing.JFrame {
         ActualizarUsuario.setBackground(new java.awt.Color(255, 255, 255));
         ActualizarUsuario.setForeground(new java.awt.Color(0, 0, 0));
         ActualizarUsuario.setText("Actualizar Usuario");
+        ActualizarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ActualizarUsuarioActionPerformed(evt);
+            }
+        });
         getContentPane().add(ActualizarUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 340, 190, 50));
 
         Volver.setBackground(new java.awt.Color(255, 255, 255));
@@ -110,33 +117,33 @@ public class MostrarUsuarios extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearUsuarioActionPerformed
-        CrearUsuario.addActionListener(e -> {
-            try {
-                String nombre = JOptionPane.showInputDialog(this, "Nombre del usuario:");
-                String dni = JOptionPane.showInputDialog(this, "DNI del usuario:");
-                String localidad = JOptionPane.showInputDialog(this, "Localidad del usuario:");
-                String telefono = JOptionPane.showInputDialog(this, "Teléfono del usuario:");
 
-                if (nombre == null || dni == null || localidad == null || telefono == null
-                        || nombre.isEmpty() || dni.isEmpty() || localidad.isEmpty() || telefono.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
-                    return;
-                }
+        try {
+            String nombre = JOptionPane.showInputDialog(this, "Nombre del usuario:");
+            String dni = JOptionPane.showInputDialog(this, "DNI del usuario:");
+            String localidad = JOptionPane.showInputDialog(this, "Localidad del usuario:");
+            String telefono = JOptionPane.showInputDialog(this, "Teléfono del usuario:");
 
-                Usuario nuevo = new Usuario();
-                nuevo.setNombreUsuario(nombre);
-                nuevo.setDniUsuario(dni);
-                nuevo.setLocalidadUsuario(localidad);
-                nuevo.setTelefUsuario(telefono);
-
-                usuarioController.create(nuevo);
-                cargarUsuariosEnTabla();
-                JOptionPane.showMessageDialog(this, "Usuario creado correctamente.");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al crear usuario.");
+            if (nombre == null || dni == null || localidad == null || telefono == null
+                    || nombre.isEmpty() || dni.isEmpty() || localidad.isEmpty() || telefono.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
+                return;
             }
-        });
+
+            Usuario nuevo = new Usuario();
+            nuevo.setNombreUsuario(nombre);
+            nuevo.setDniUsuario(dni);
+            nuevo.setLocalidadUsuario(localidad);
+            nuevo.setTelefUsuario(telefono);
+
+            usuarioController.create(nuevo);
+            cargarUsuariosEnTabla();
+            JOptionPane.showMessageDialog(this, "Usuario creado correctamente.");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al crear usuario.");
+        }
+
     }//GEN-LAST:event_CrearUsuarioActionPerformed
 
     private void VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VolverActionPerformed
@@ -145,43 +152,89 @@ public class MostrarUsuarios extends javax.swing.JFrame {
     }//GEN-LAST:event_VolverActionPerformed
 
     private void BorrarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarUsuarioActionPerformed
-        BorrarUsuario.addActionListener(e -> {
-            int fila = jTable1.getSelectedRow();
-            if (fila == -1) {
-                JOptionPane.showMessageDialog(this, "Selecciona un usuario para borrar.");
-                return;
-            }
 
-            int codUsuario = (int) jTable1.getValueAt(fila, 0);
-            int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que quieres borrar el usuario " + codUsuario + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                try {
-                    usuarioController.delete(codUsuario);
-                    cargarUsuariosEnTabla();
-                    JOptionPane.showMessageDialog(this, "Usuario eliminado correctamente.");
-                } catch (HeadlessException ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(this, "Error al eliminar usuario.");
-                }
+        int fila = jTable1.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un usuario para borrar.");
+            return;
+        }
+
+        int codUsuario = (int) jTable1.getValueAt(fila, 0);
+        int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que quieres borrar el usuario " + codUsuario + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                usuarioController.delete(codUsuario);
+                cargarUsuariosEnTabla();
+                JOptionPane.showMessageDialog(this, "Usuario eliminado correctamente.");
+            } catch (HeadlessException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al eliminar usuario.");
             }
-        });
+        }
+
 
     }//GEN-LAST:event_BorrarUsuarioActionPerformed
 
+    private void ActualizarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActualizarUsuarioActionPerformed
+        int filaSeleccionada = jTable1.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un usuario de la tabla para actualizar.");
+            return;
+        }
+
+        // Obtener el ID del usuario seleccionado
+        int codUsuario = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
+        Usuario usuario = usuarioController.findById(codUsuario);
+
+        if (usuario != null) {
+            String nuevoNombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", usuario.getNombreUsuario());
+            String nuevoDNI = JOptionPane.showInputDialog(this, "Nuevo DNI:", usuario.getDniUsuario());
+            String nuevaLocalidad = JOptionPane.showInputDialog(this, "Nueva localidad:", usuario.getLocalidadUsuario());
+            String nuevoTelefono = JOptionPane.showInputDialog(this, "Nuevo teléfono:", usuario.getTelefUsuario());
+
+            if (nuevoNombre == null || nuevoNombre.trim().isEmpty()
+                    || nuevoDNI == null || nuevoDNI.trim().isEmpty()
+                    || nuevaLocalidad == null || nuevaLocalidad.trim().isEmpty()
+                    || nuevoTelefono == null || nuevoTelefono.trim().isEmpty()) {
+
+                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
+                return;
+            }
+
+            usuario.setNombreUsuario(nuevoNombre);
+            usuario.setDniUsuario(nuevoDNI);
+            usuario.setLocalidadUsuario(nuevaLocalidad);
+            usuario.setTelefUsuario(nuevoTelefono);
+
+            usuarioController.update(usuario);
+            cargarUsuariosEnTabla();
+            JOptionPane.showMessageDialog(this, "Usuario actualizado correctamente.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Error: No se encontró el usuario.");
+        }
+    }//GEN-LAST:event_ActualizarUsuarioActionPerformed
+
     private void cargarUsuariosEnTabla() {
-        List<Usuario> usuario = usuarioController.findAll();
+        List<Usuario> usuarios = usuarioController.findAll();
 
         DefaultTableModel modelo = new DefaultTableModel();
-        modelo.setColumnIdentifiers(new String[]{"ID", "Nombre", "DNI", "Localidad", "Telefono", "Coleccion de Ventas"});
+        modelo.setColumnIdentifiers(new String[]{"ID", "Nombre", "DNI", "Localidad", "Teléfono", "Ventas Asociadas"});
 
-        for (Usuario u : usuario) {
+        for (Usuario u : usuarios) {
+            String ventas = (u.getVentaCollection() != null && !u.getVentaCollection().isEmpty())
+                    ? u.getVentaCollection().stream()
+                            .map(v -> v.getCodVenta().toString()) // Convertir cada venta en String
+                            .collect(Collectors.joining(", ")) // Separar por comas
+                    : "Sin ventas";
+
             modelo.addRow(new Object[]{
                 u.getCodUsuario(),
                 u.getNombreUsuario(),
                 u.getDniUsuario(),
                 u.getLocalidadUsuario(),
                 u.getTelefUsuario(),
-                (u.getVentaCollection() != null) ? u.getVentaCollection() : "Sin ventas"
+                ventas
             });
         }
 

@@ -121,7 +121,7 @@ public class MostrarArtistas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CrearArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearArtistaActionPerformed
-        CrearArtista.addActionListener(e -> {
+      
             String nombre = JOptionPane.showInputDialog(this, "Nombre del artista:");
             if (nombre == null || nombre.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Nombre no puede estar vacío.");
@@ -135,7 +135,7 @@ public class MostrarArtistas extends javax.swing.JFrame {
                 Artista artista = new Artista();
                 artista.setNomArtista(nombre);
                 artista.setFechaNacimientoArtista(fecha);
-
+                
                 artistaController.create(artista);
                 cargarArtistasEnTabla();
             } catch (DateTimeParseException ex) {
@@ -143,7 +143,6 @@ public class MostrarArtistas extends javax.swing.JFrame {
             } catch (ParseException ex) {
                 Logger.getLogger(MostrarArtistas.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
     }//GEN-LAST:event_CrearArtistaActionPerformed
 
     private void VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VolverActionPerformed
@@ -152,7 +151,7 @@ public class MostrarArtistas extends javax.swing.JFrame {
     }//GEN-LAST:event_VolverActionPerformed
 
     private void BorrarArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarArtistaActionPerformed
-        BorrarArtista.addActionListener(e -> {
+
             int filaSeleccionada = jTable1.getSelectedRow();
             if (filaSeleccionada == -1) {
                 JOptionPane.showMessageDialog(this, "Selecciona un artista para borrar.");
@@ -178,11 +177,11 @@ public class MostrarArtistas extends javax.swing.JFrame {
                 cargarArtistasEnTabla();
                 JOptionPane.showMessageDialog(this, "Artista eliminado correctamente.");
             }
-        });
+
     }//GEN-LAST:event_BorrarArtistaActionPerformed
 
     private void ActualizarArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActualizarArtistaActionPerformed
-        ActualizarArtista.addActionListener(e -> {
+
             int filaSeleccionada = jTable1.getSelectedRow();
             if (filaSeleccionada == -1) {
                 JOptionPane.showMessageDialog(this, "Selecciona un artista para actualizar.");
@@ -219,7 +218,7 @@ public class MostrarArtistas extends javax.swing.JFrame {
                     Logger.getLogger(MostrarArtistas.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        });
+
     }//GEN-LAST:event_ActualizarArtistaActionPerformed
 
     private void cargarArtistasEnTabla() {

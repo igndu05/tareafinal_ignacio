@@ -47,12 +47,11 @@ public class Disco implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaLanzamiento;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "codArtista")
     private Artista artista;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "codDisco")
+    @OneToMany(mappedBy = "disco", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<DetalleVenta> detalleVentaCollection;
 
     public Disco() {

@@ -47,6 +47,7 @@ public class DetalleVentaController {
         } finally {
             em.close();
         }
+        System.out.println("PRUEBA");
     }
 
     /**
