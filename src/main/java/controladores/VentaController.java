@@ -42,14 +42,12 @@ public class VentaController {
         try {
             tx.begin();
 
-            // Asociar la venta al usuario sin persistir el usuario nuevamente
-            Usuario usuario = em.find(Usuario.class, venta.getCodUsuario().getCodUsuario());
-            venta.setCodUsuario(usuario);
+            Usuario usuario = em.find(Usuario.class, venta.getUsuario().getCodUsuario());
+            venta.setUsuario(usuario);
 
-            em.persist(venta);
+            em.persist(venta); // Gracias al cascade, los DetalleVenta se guardan solos
 
             tx.commit();
-
         } catch (Exception ex) {
             if (tx.isActive()) {
                 tx.rollback();
@@ -69,7 +67,11 @@ public class VentaController {
     public Venta findById(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Venta.class, id);
+            Venta venta = em.find(Venta.class, id);
+            if (venta != null) {
+                em.refresh(venta); // 🧼 Borramos la caché de EclipseLink
+            }
+            return venta;
         } finally {
             em.close();
         }

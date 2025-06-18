@@ -135,7 +135,6 @@ public class MostrarVentas extends javax.swing.JFrame {
                 return;
             }
 
-            // Crear JComboBox para usuarios
             JComboBox<String> comboUsuarios = new JComboBox<>();
             Map<String, Usuario> mapaUsuarios = new HashMap<>();
             for (Usuario usuario : usuarios) {
@@ -157,7 +156,6 @@ public class MostrarVentas extends javax.swing.JFrame {
                 return;
             }
 
-            // Crear JComboBox para discos
             JComboBox<String> comboDiscos = new JComboBox<>();
             Map<String, Disco> mapaDiscos = new HashMap<>();
             for (Disco disco : discos) {
@@ -172,16 +170,20 @@ public class MostrarVentas extends javax.swing.JFrame {
             }
             Disco discoSeleccionado = mapaDiscos.get(comboDiscos.getSelectedItem());
 
-            // Crear la venta sin modificar el usuario
+            // Crear la venta
             Venta venta = new Venta();
             venta.setFechaVenta(new Date());
-            venta.setCodUsuario(usuarioSeleccionado);
+
+            // Solo pasamos el ID del usuario, y dejamos que VentaController lo sincronice
+            Usuario usuarioTemporal = new Usuario();
+            usuarioTemporal.setCodUsuario(usuarioSeleccionado.getCodUsuario());
+            venta.setUsuario(usuarioTemporal);
 
             DetalleVenta detalle = new DetalleVenta();
             detalle.setDisco(discoSeleccionado);
-            venta.addDetalleVenta(detalle);
+            venta.addDetalleVenta(detalle); // También hace setVenta()
 
-            // Persistir solo la venta (No modificar el usuario)
+            // El create() se encarga de em.find(usuario) para evitar duplicados
             ventaController.create(venta);
 
             JOptionPane.showMessageDialog(this, "Venta creada correctamente.");
@@ -194,96 +196,124 @@ public class MostrarVentas extends javax.swing.JFrame {
 
     private void BorrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarVentaActionPerformed
         try {
-            Venta venta = null;
-            while (venta == null) {
-                String inputCodVenta = JOptionPane.showInputDialog(this, "Ingrese el código de la venta a borrar:");
-                if (inputCodVenta == null) {
-                    return; // Cancelar
-                }
-                try {
-                    int codVenta = Integer.parseInt(inputCodVenta.trim());
-                    venta = ventaController.findById(codVenta);
-                    if (venta == null) {
-                        JOptionPane.showMessageDialog(this, "Venta no encontrada. Ingrese un código existente.");
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de venta.");
+            List<Venta> ventas = ventaController.findAll();
+            if (ventas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay ventas registradas.");
+                return;
+            }
+
+            // Crear JComboBox para seleccionar una venta
+            JComboBox<String> comboVentas = new JComboBox<>();
+            Map<String, Venta> mapaVentas = new HashMap<>();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            for (Venta v : ventas) {
+                String texto = "(" + v.getCodVenta() + ") - "
+                        + (v.getUsuario() != null ? v.getUsuario().getNombreUsuario() : "Sin usuario")
+                        + " - " + sdf.format(v.getFechaVenta());
+                comboVentas.addItem(texto);
+                mapaVentas.put(texto, v);
+            }
+
+            int opcion = JOptionPane.showConfirmDialog(this, comboVentas, "Selecciona la venta a borrar", JOptionPane.OK_CANCEL_OPTION);
+            if (opcion != JOptionPane.OK_OPTION) {
+                return;
+            }
+
+            Venta ventaSeleccionada = mapaVentas.get(comboVentas.getSelectedItem());
+
+            if (ventaSeleccionada.getDetalleVentaCollection() != null && !ventaSeleccionada.getDetalleVentaCollection().isEmpty()) {
+                int confirm = JOptionPane.showConfirmDialog(this,
+                        "La venta tiene detalles asociados. ¿Deseas eliminarla junto a sus detalles?",
+                        "Confirmar borrado", JOptionPane.YES_NO_OPTION);
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
                 }
             }
 
-            ventaController.delete(venta.getCodVenta());
-            JOptionPane.showMessageDialog(this, "Venta borrada correctamente.");
+            ventaController.delete(ventaSeleccionada.getCodVenta());
+            JOptionPane.showMessageDialog(this, "Venta eliminada correctamente.");
             cargarVentasEnTabla();
 
-        } catch (HeadlessException e) {
-            JOptionPane.showMessageDialog(this, "Error al borrar venta: " + e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al borrar la venta: " + e.getMessage());
         }
     }//GEN-LAST:event_BorrarVentaActionPerformed
 
     private void ActualizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActualizarVentaActionPerformed
         try {
-            Venta venta = null;
-            while (venta == null) {
-                String inputCodVenta = JOptionPane.showInputDialog(this, "Ingrese el código de la venta a modificar:");
-                if (inputCodVenta == null) {
-                    return; // Cancelar
-                }
-                try {
-                    int codVenta = Integer.parseInt(inputCodVenta.trim());
-                    venta = ventaController.findById(codVenta);
-                    if (venta == null) {
-                        JOptionPane.showMessageDialog(this, "Venta no encontrada. Ingrese un código existente.");
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de venta.");
-                }
+            // 1. Selección de la venta
+            List<Venta> ventas = ventaController.findAll();
+            if (ventas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay ventas registradas.");
+                return;
             }
 
-            Usuario usuario = null;
-            while (usuario == null) {
-                String inputCodUsuario = JOptionPane.showInputDialog(this, "Ingrese el nuevo código del usuario:");
-                if (inputCodUsuario == null) {
-                    return; // Cancelar
-                }
-                try {
-                    int codUsuario = Integer.parseInt(inputCodUsuario.trim());
-                    usuario = usuarioController.findById(codUsuario);
-                    if (usuario == null) {
-                        JOptionPane.showMessageDialog(this, "Usuario no encontrado. Ingrese un código existente.");
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código de usuario.");
-                }
+            JComboBox<String> comboVentas = new JComboBox<>();
+            Map<String, Venta> mapaVentas = new HashMap<>();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            for (Venta v : ventas) {
+                String key = "(" + v.getCodVenta() + ") - "
+                        + (v.getUsuario() != null ? v.getUsuario().getNombreUsuario() : "Sin usuario")
+                        + " - " + sdf.format(v.getFechaVenta());
+                comboVentas.addItem(key);
+                mapaVentas.put(key, v);
             }
 
-            Disco disco = null;
-            while (disco == null) {
-                String inputCodDisco = JOptionPane.showInputDialog(this, "Ingrese el nuevo código del disco:");
-                if (inputCodDisco == null) {
-                    return; // Cancelar
-                }
-                try {
-                    int codDisco = Integer.parseInt(inputCodDisco.trim());
-                    disco = discoController.findById(codDisco);
-                    if (disco == null) {
-                        JOptionPane.showMessageDialog(this, "Disco no encontrado. Ingrese un código existente.");
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el código del disco.");
-                }
+            int opcionVenta = JOptionPane.showConfirmDialog(this, comboVentas, "Selecciona la venta a modificar", JOptionPane.OK_CANCEL_OPTION);
+            if (opcionVenta != JOptionPane.OK_OPTION) {
+                return;
+            }
+            Venta venta = mapaVentas.get(comboVentas.getSelectedItem());
+
+            // 2. Selección del nuevo usuario
+            List<Usuario> usuarios = usuarioController.findAll();
+            JComboBox<String> comboUsuarios = new JComboBox<>();
+            Map<String, Usuario> mapaUsuarios = new HashMap<>();
+
+            for (Usuario u : usuarios) {
+                String key = "(" + u.getCodUsuario() + ") - " + u.getNombreUsuario();
+                comboUsuarios.addItem(key);
+                mapaUsuarios.put(key, u);
             }
 
-            // Actualizamos la venta
-            venta.setCodUsuario(usuario);
+            if (venta.getUsuario() != null) {
+                String actual = "(" + venta.getUsuario().getCodUsuario() + ") - " + venta.getUsuario().getNombreUsuario();
+                comboUsuarios.setSelectedItem(actual);
+            }
+
+            int opcionUsuario = JOptionPane.showConfirmDialog(this, comboUsuarios, "Selecciona el nuevo usuario", JOptionPane.OK_CANCEL_OPTION);
+            if (opcionUsuario != JOptionPane.OK_OPTION) {
+                return;
+            }
+            Usuario nuevoUsuario = mapaUsuarios.get(comboUsuarios.getSelectedItem());
+
+            // 3. Selección del nuevo disco
+            List<Disco> discos = discoController.findAll();
+            JComboBox<String> comboDiscos = new JComboBox<>();
+            Map<String, Disco> mapaDiscos = new HashMap<>();
+
+            for (Disco d : discos) {
+                String key = "(" + d.getCodDisco() + ") - " + d.getNomDisco();
+                comboDiscos.addItem(key);
+                mapaDiscos.put(key, d);
+            }
+
+            int opcionDisco = JOptionPane.showConfirmDialog(this, comboDiscos, "Selecciona el nuevo disco", JOptionPane.OK_CANCEL_OPTION);
+            if (opcionDisco != JOptionPane.OK_OPTION) {
+                return;
+            }
+            Disco nuevoDisco = mapaDiscos.get(comboDiscos.getSelectedItem());
+
+            // Actualizar venta
+            venta.setUsuario(nuevoUsuario);
             venta.setFechaVenta(new Date());
-
-            // Limpiamos detalles antiguos y agregamos el nuevo detalle con el disco
             venta.getDetalleVentaCollection().clear();
 
             DetalleVenta detalle = new DetalleVenta();
-            detalle.setDisco(disco);
-            // detalle.setCantidad(1); // si tienes cantidad
-
+            detalle.setDisco(nuevoDisco);
+            detalle.setVenta(venta);
             venta.addDetalleVenta(detalle);
 
             ventaController.update(venta);
@@ -309,7 +339,7 @@ public class MostrarVentas extends javax.swing.JFrame {
         for (Venta venta : ventas) {
             modelo.addRow(new Object[]{
                 venta.getCodVenta(),
-                venta.getCodUsuario().getNombreUsuario(),
+                venta.getUsuario().getNombreUsuario(),
                 new SimpleDateFormat("dd/MM/yyyy").format(venta.getFechaVenta())
             });
         }

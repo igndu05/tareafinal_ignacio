@@ -101,11 +101,11 @@ public class Venta implements Serializable {
         this.fechaVenta = Date.from(fechaVenta.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public Usuario getCodUsuario() {
+    public Usuario getUsuario() {
         return usuario;
     }
 
-    public void setCodUsuario(Usuario codUsuario) {
+    public void setUsuario(Usuario codUsuario) {
         this.usuario = codUsuario;
     }
 

@@ -51,7 +51,7 @@ public class Usuario implements Serializable {
     @Column(name = "telefUsuario")
     private String telefUsuario;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "usuario")
     private Collection<Venta> ventaCollection;
 
     // Constructores
@@ -117,13 +117,7 @@ public class Usuario implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + Objects.hashCode(this.codUsuario);
-        hash = 29 * hash + Objects.hashCode(this.nombreUsuario);
-        hash = 29 * hash + Objects.hashCode(this.dniUsuario);
-        hash = 29 * hash + Objects.hashCode(this.localidadUsuario);
-        hash = 29 * hash + Objects.hashCode(this.telefUsuario);
-        return hash;
+        return Objects.hash(codUsuario);
     }
 
     @Override
@@ -131,25 +125,10 @@ public class Usuario implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Usuario other = (Usuario) obj;
-        if (!Objects.equals(this.nombreUsuario, other.nombreUsuario)) {
-            return false;
-        }
-        if (!Objects.equals(this.dniUsuario, other.dniUsuario)) {
-            return false;
-        }
-        if (!Objects.equals(this.localidadUsuario, other.localidadUsuario)) {
-            return false;
-        }
-        if (!Objects.equals(this.telefUsuario, other.telefUsuario)) {
-            return false;
-        }
+        Usuario other = (Usuario) obj;
         return Objects.equals(this.codUsuario, other.codUsuario);
     }
 
@@ -165,17 +144,17 @@ public class Usuario implements Serializable {
     public void setVentaCollection(Collection<Venta> ventaCollection) {
         this.ventaCollection = ventaCollection;
         for (Venta venta : ventaCollection) {
-            venta.setCodUsuario(this);
+            venta.setUsuario(this);
         }
     }
 
     public void addVenta(Venta venta) {
         this.ventaCollection.add(venta);
-        venta.setCodUsuario(this);
+        venta.setUsuario(this);
     }
 
     public void removeVenta(Venta venta) {
         this.ventaCollection.remove(venta);
-        venta.setCodUsuario(null);
+        venta.setUsuario(null);
     }
 }

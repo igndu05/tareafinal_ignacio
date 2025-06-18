@@ -38,11 +38,11 @@ public class DetalleVenta implements Serializable {
     private Integer codDetalleVenta;
     
     @ManyToOne()
-    @JoinColumn(name = "codVenta")
+    @JoinColumn(name = "codVenta", nullable = false)
     private Venta venta;
     
     @ManyToOne()
-    @JoinColumn(name = "codDisco")
+    @JoinColumn(name = "codDisco", nullable = false)
     private Disco disco;
 
     public DetalleVenta() {
