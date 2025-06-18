@@ -121,28 +121,28 @@ public class MostrarArtistas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CrearArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearArtistaActionPerformed
-      
-            String nombre = JOptionPane.showInputDialog(this, "Nombre del artista:");
-            if (nombre == null || nombre.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Nombre no puede estar vacío.");
-                return;
-            }
 
-            String fechaStr = JOptionPane.showInputDialog(this, "Fecha de nacimiento (YYYY-MM-DD):");
-            try {
-                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-                Date fecha = formato.parse(fechaStr);
-                Artista artista = new Artista();
-                artista.setNomArtista(nombre);
-                artista.setFechaNacimientoArtista(fecha);
-                
-                artistaController.create(artista);
-                cargarArtistasEnTabla();
-            } catch (DateTimeParseException ex) {
-                JOptionPane.showMessageDialog(this, "Formato de fecha inválido.");
-            } catch (ParseException ex) {
-                Logger.getLogger(MostrarArtistas.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        String nombre = JOptionPane.showInputDialog(this, "Nombre del artista:");
+        if (nombre == null || nombre.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nombre no puede estar vacío.");
+            return;
+        }
+
+        String fechaStr = JOptionPane.showInputDialog(this, "Fecha de nacimiento (YYYY-MM-DD):");
+        try {
+            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+            Date fecha = formato.parse(fechaStr);
+            Artista artista = new Artista();
+            artista.setNomArtista(nombre);
+            artista.setFechaNacimientoArtista(fecha);
+
+            artistaController.create(artista);
+            cargarArtistasEnTabla();
+        } catch (DateTimeParseException ex) {
+            JOptionPane.showMessageDialog(this, "Formato de fecha inválido.");
+        } catch (ParseException ex) {
+            Logger.getLogger(MostrarArtistas.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_CrearArtistaActionPerformed
 
     private void VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VolverActionPerformed
@@ -152,72 +152,71 @@ public class MostrarArtistas extends javax.swing.JFrame {
 
     private void BorrarArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarArtistaActionPerformed
 
-            int filaSeleccionada = jTable1.getSelectedRow();
-            if (filaSeleccionada == -1) {
-                JOptionPane.showMessageDialog(this, "Selecciona un artista para borrar.");
-                return;
-            }
+        int filaSeleccionada = jTable1.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un artista para borrar.");
+            return;
+        }
 
-            int id = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
-            Artista artista = artistaController.findById(id);
+        int id = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
+        Artista artistaActualizado = artistaController.findById(id);
 
-            // Verificar si el artista tiene discos asociados antes de eliminarlo
-            if (artista != null && !artista.getDiscoCollection().isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "No puedes eliminar este artista porque tiene discos asociados. "
-                        + "Primero elimina los discos o reasígnalos a otro artista.");
-                return;
-            }
+        if (artistaActualizado.getDiscoCollection() != null && !artistaActualizado.getDiscoCollection().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "No puedes eliminar este artista porque tiene discos asociados.\n"
+                    + "Primero elimina o reasigna los discos a otro artista.");
+            return;
+        }
 
-            int confirm = JOptionPane.showConfirmDialog(this,
-                    "¿Estás seguro que deseas eliminar este artista?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "¿Estás seguro que deseas eliminar este artista?", "Confirmar", JOptionPane.YES_NO_OPTION);
 
-            if (confirm == JOptionPane.YES_OPTION) {
-                artistaController.delete(id);
-                cargarArtistasEnTabla();
-                JOptionPane.showMessageDialog(this, "Artista eliminado correctamente.");
-            }
+        if (confirm == JOptionPane.YES_OPTION) {
+            artistaController.delete(id);
+            cargarArtistasEnTabla();
+            JOptionPane.showMessageDialog(this, "Artista eliminado correctamente.");
+        }
 
     }//GEN-LAST:event_BorrarArtistaActionPerformed
 
     private void ActualizarArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActualizarArtistaActionPerformed
 
-            int filaSeleccionada = jTable1.getSelectedRow();
-            if (filaSeleccionada == -1) {
-                JOptionPane.showMessageDialog(this, "Selecciona un artista para actualizar.");
+        int filaSeleccionada = jTable1.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un artista para actualizar.");
+            return;
+        }
+
+        int id = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
+        Artista artista = artistaController.findById(id);
+
+        if (artista != null) {
+            String nuevoNombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", artista.getNomArtista());
+            if (nuevoNombre == null || nuevoNombre.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nombre no puede estar vacío.");
                 return;
             }
 
-            int id = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
-            Artista artista = artistaController.findById(id);
-
-            if (artista != null) {
-                String nuevoNombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", artista.getNomArtista());
-                if (nuevoNombre == null || nuevoNombre.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Nombre no puede estar vacío.");
+            String nuevaFechaStr = JOptionPane.showInputDialog(null, "Inserte la nueva fecha (YYYY-MM-DD)");
+            try {
+                if (nuevaFechaStr == null || nuevaFechaStr.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "La fecha no puede estar vacía.");
                     return;
                 }
 
-                String nuevaFechaStr = JOptionPane.showInputDialog(null, "Inserte la nueva fecha (YYYY-MM-DD)");
-                try {
-                    if (nuevaFechaStr == null || nuevaFechaStr.trim().isEmpty()) {
-                        JOptionPane.showMessageDialog(this, "La fecha no puede estar vacía.");
-                        return;
-                    }
+                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+                formato.setLenient(false); // Evita entradas inválidas como "2025-13-32"
+                Date fecha = formato.parse(nuevaFechaStr);
 
-                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-                    formato.setLenient(false); // Evita entradas inválidas como "2025-13-32"
-                    Date fecha = formato.parse(nuevaFechaStr);
-
-                    artista.setFechaNacimientoArtista(fecha);
-                    artistaController.update(artista);
-                    cargarArtistasEnTabla();
-                } catch (DateTimeParseException ex) {
-                    JOptionPane.showMessageDialog(this, "Formato de fecha inválido.");
-                } catch (ParseException ex) {
-                    Logger.getLogger(MostrarArtistas.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                artista.setFechaNacimientoArtista(fecha);
+                artistaController.update(artista);
+                cargarArtistasEnTabla();
+            } catch (DateTimeParseException ex) {
+                JOptionPane.showMessageDialog(this, "Formato de fecha inválido.");
+            } catch (ParseException ex) {
+                Logger.getLogger(MostrarArtistas.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
 
     }//GEN-LAST:event_ActualizarArtistaActionPerformed
 

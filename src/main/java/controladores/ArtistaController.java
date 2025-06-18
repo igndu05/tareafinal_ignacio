@@ -10,6 +10,7 @@ import javax.persistence.Persistence;
 import entidades.Artista;
 
 public class ArtistaController {
+
     private final EntityManagerFactory emf;
 
     public ArtistaController() {
@@ -40,7 +41,11 @@ public class ArtistaController {
     public Artista findById(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Artista.class, id);
+            Artista artista = em.find(Artista.class, id);
+            if (artista != null) {
+                em.refresh(artista); // Fuerza sincronización con la BBDD
+            }
+            return artista;
         } finally {
             em.close();
         }

@@ -48,7 +48,7 @@ public class Disco implements Serializable {
     private Date fechaLanzamiento;
 
     @ManyToOne
-    @JoinColumn(name = "codArtista")
+    @JoinColumn(name = "codArtista", nullable = false)
     private Artista artista;
 
     @OneToMany(mappedBy = "disco", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -142,11 +142,10 @@ public class Disco implements Serializable {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 59 * hash + Objects.hashCode(this.codDisco);
-        hash = 59 * hash + Objects.hashCode(this.nomDisco);
-        hash = 59 * hash + Objects.hashCode(this.fechaLanzamiento);
-        hash = 59 * hash + Objects.hashCode(this.artista);
-        hash = 59 * hash + Objects.hashCode(this.detalleVentaCollection);
+        hash = 17 * hash + Objects.hashCode(this.codDisco);
+        hash = 17 * hash + Objects.hashCode(this.nomDisco);
+        hash = 17 * hash + Objects.hashCode(this.fechaLanzamiento);
+        hash = 17 * hash + Objects.hashCode(this.artista);
         return hash;
     }
 
@@ -171,11 +170,10 @@ public class Disco implements Serializable {
         if (!Objects.equals(this.fechaLanzamiento, other.fechaLanzamiento)) {
             return false;
         }
-        if (!Objects.equals(this.artista, other.artista)) {
-            return false;
-        }
-        return Objects.equals(this.detalleVentaCollection, other.detalleVentaCollection);
+        return Objects.equals(this.artista, other.artista);
     }
+
+    
 
     @Override
     public String toString() {

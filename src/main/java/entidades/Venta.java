@@ -50,9 +50,9 @@ public class Venta implements Serializable {
     @Column(name = "fechaVenta")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaVenta;
-    
+
     @ManyToOne(optional = false)
-    @JoinColumn(name = "codUsuario", nullable = false)   
+    @JoinColumn(name = "codUsuario", nullable = false)
     private Usuario usuario;
 
     @OneToMany(mappedBy = "venta", cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -86,12 +86,12 @@ public class Venta implements Serializable {
     public LocalDateTime getFechaLocalDateTime() {
         return fechaVenta.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
-    
+
     public String getFechaFormateada() {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    return getFechaLocalDateTime().format(formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return getFechaLocalDateTime().format(formatter);
     }
-    
+
     public void setFechaVenta(Date fechaVenta) {
         this.fechaVenta = fechaVenta;
     }
@@ -140,10 +140,9 @@ public class Venta implements Serializable {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 31 * hash + Objects.hashCode(this.codVenta);
-        hash = 31 * hash + Objects.hashCode(this.fechaVenta);
-        hash = 31 * hash + Objects.hashCode(this.usuario);
-        hash = 31 * hash + Objects.hashCode(this.detalleVentaCollection);
+        hash = 79 * hash + Objects.hashCode(this.codVenta);
+        hash = 79 * hash + Objects.hashCode(this.fechaVenta);
+        hash = 79 * hash + Objects.hashCode(this.usuario);
         return hash;
     }
 
@@ -165,10 +164,7 @@ public class Venta implements Serializable {
         if (!Objects.equals(this.fechaVenta, other.fechaVenta)) {
             return false;
         }
-        if (!Objects.equals(this.usuario, other.usuario)) {
-            return false;
-        }
-        return Objects.equals(this.detalleVentaCollection, other.detalleVentaCollection);
+        return Objects.equals(this.usuario, other.usuario);
     }
 
     @Override

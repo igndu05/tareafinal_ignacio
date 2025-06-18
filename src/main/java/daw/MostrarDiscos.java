@@ -234,39 +234,48 @@ public class MostrarDiscos extends javax.swing.JFrame {
             }
 
             // Validar fecha de lanzamiento
-            String nuevaFechaStr = JOptionPane.showInputDialog(null, "Inserte la nueva fecha (YYYY-MM-DD)");
+            String nuevaFechaStr = JOptionPane.showInputDialog(null, "Inserta la nueva fecha (YYYY-MM-DD):",
+                    new SimpleDateFormat("yyyy-MM-dd").format(disco.getFechaLanzamiento()));
             Date nuevaFecha;
             try {
                 SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-                formato.setLenient(false); // Evita fechas incorrectas como "2025-13-32"
+                formato.setLenient(false);
                 nuevaFecha = formato.parse(nuevaFechaStr);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Usa YYYY-MM-DD.");
                 return;
             }
 
-            // Validar ID del artista
-            String nuevoArtistaIdStr = JOptionPane.showInputDialog(this, "Nuevo ID artista:", disco.getArtista() != null ? Integer.toString(disco.getArtista().getCodArtista()) : "");
-            if (nuevoArtistaIdStr == null || nuevoArtistaIdStr.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "El ID de artista no puede estar vacío.");
+            // Obtener lista de artistas y crear combo
+            List<Artista> artistas = artistaController.findAll();
+            if (artistas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay artistas disponibles.");
                 return;
             }
 
-            int nuevoArtistaId;
-            try {
-                nuevoArtistaId = Integer.parseInt(nuevoArtistaIdStr);
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "El ID de artista debe ser un número entero.");
+            JComboBox<String> comboArtistas = new JComboBox<>();
+            Map<String, Artista> mapaArtistas = new HashMap<>();
+
+            for (Artista artista : artistas) {
+                String key = "(" + artista.getCodArtista() + ") - " + artista.getNomArtista();
+                comboArtistas.addItem(key);
+                mapaArtistas.put(key, artista);
+            }
+
+            // Mostrar selección actual si existe
+            if (disco.getArtista() != null) {
+                String artistaActual = "(" + disco.getArtista().getCodArtista() + ") - " + disco.getArtista().getNomArtista();
+                comboArtistas.setSelectedItem(artistaActual);
+            }
+
+            int seleccion = JOptionPane.showConfirmDialog(this, comboArtistas, "Selecciona nuevo artista", JOptionPane.OK_CANCEL_OPTION);
+            if (seleccion != JOptionPane.OK_OPTION) {
                 return;
             }
 
-            Artista nuevoArtista = artistaController.findById(nuevoArtistaId);
-            if (nuevoArtista == null) {
-                JOptionPane.showMessageDialog(this, "No existe artista con ese ID.");
-                return;
-            }
+            Artista nuevoArtista = mapaArtistas.get(comboArtistas.getSelectedItem());
 
-            // Actualizar disco con los nuevos valores
+            // Aplicar cambios
             disco.setNomDisco(nuevoNombre);
             disco.setFechaLanzamiento(nuevaFecha);
             disco.setArtista(nuevoArtista);
@@ -275,7 +284,7 @@ public class MostrarDiscos extends javax.swing.JFrame {
             cargarDiscosEnTabla();
             JOptionPane.showMessageDialog(this, "Disco actualizado correctamente.");
         } else {
-            JOptionPane.showMessageDialog(this, "No se encontró el disco con el ID especificado.");
+            JOptionPane.showMessageDialog(this, "No se encontró el disco.");
         }
 
     }//GEN-LAST:event_ActualizarDiscoActionPerformed

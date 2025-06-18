@@ -130,11 +130,10 @@ public class Artista implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 59 * hash + Objects.hashCode(this.codArtista);
-        hash = 59 * hash + Objects.hashCode(this.nomArtista);
-        hash = 59 * hash + Objects.hashCode(this.fechaNacimientoArtista);
-        hash = 59 * hash + Objects.hashCode(this.discoCollection);
+        int hash = 7;
+        hash = 83 * hash + Objects.hashCode(this.codArtista);
+        hash = 83 * hash + Objects.hashCode(this.nomArtista);
+        hash = 83 * hash + Objects.hashCode(this.fechaNacimientoArtista);
         return hash;
     }
 
@@ -156,10 +155,7 @@ public class Artista implements Serializable {
         if (!Objects.equals(this.codArtista, other.codArtista)) {
             return false;
         }
-        if (!Objects.equals(this.fechaNacimientoArtista, other.fechaNacimientoArtista)) {
-            return false;
-        }
-        return Objects.equals(this.discoCollection, other.discoCollection);
+        return Objects.equals(this.fechaNacimientoArtista, other.fechaNacimientoArtista);
     }
 
     @Override

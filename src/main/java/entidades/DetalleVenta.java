@@ -78,7 +78,7 @@ public class DetalleVenta implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
+        int hash = 5;
         hash = 37 * hash + Objects.hashCode(this.codDetalleVenta);
         hash = 37 * hash + Objects.hashCode(this.venta);
         hash = 37 * hash + Objects.hashCode(this.disco);
@@ -105,6 +105,8 @@ public class DetalleVenta implements Serializable {
         }
         return Objects.equals(this.disco, other.disco);
     }
+
+    
 
     @Override
     public String toString() {
