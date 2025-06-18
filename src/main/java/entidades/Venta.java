@@ -169,12 +169,11 @@ public class Venta implements Serializable {
 
     @Override
     public String toString() {
-        String tmp = "";
-        for (DetalleVenta detalle : detalleVentaCollection) {
-            tmp += detalle + "\n";
-        }
-        return "Venta{" + "id=" + codVenta + ", fecha=" + fechaVenta + ", idUsuario=" + usuario.getCodUsuario()
-                + ", detalleventaCollection=\n" + tmp + '}';
+        return "Venta{"
+                + "id=" + codVenta
+                + ", fecha=" + fechaVenta
+                + ", usuario=" + (usuario != null ? usuario.getCodUsuario() : "null")
+                + '}';
     }
 
 }

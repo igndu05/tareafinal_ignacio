@@ -10,6 +10,7 @@ import javax.persistence.Persistence;
 import entidades.Usuario;
 
 public class UsuarioController {
+
     private final EntityManagerFactory emf;
 
     public UsuarioController() {
@@ -40,7 +41,11 @@ public class UsuarioController {
     public Usuario findById(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Usuario.class, id);
+            Usuario usuario = em.find(Usuario.class, id);
+            if (usuario != null) {
+                em.refresh(usuario); // Asegura que la colección de ventas esté actualizada
+            }
+            return usuario;
         } finally {
             em.close();
         }

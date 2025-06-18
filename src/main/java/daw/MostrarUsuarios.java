@@ -8,8 +8,11 @@ import controladores.UsuarioController;
 import entidades.Disco;
 import entidades.Usuario;
 import java.awt.HeadlessException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.hibernate.Hibernate;
@@ -153,26 +156,54 @@ public class MostrarUsuarios extends javax.swing.JFrame {
 
     private void BorrarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarUsuarioActionPerformed
 
-        int fila = jTable1.getSelectedRow();
-        if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona un usuario para borrar.");
-            return;
-        }
-
-        int codUsuario = (int) jTable1.getValueAt(fila, 0);
-        int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que quieres borrar el usuario " + codUsuario + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                usuarioController.delete(codUsuario);
-                cargarUsuariosEnTabla();
-                JOptionPane.showMessageDialog(this, "Usuario eliminado correctamente.");
-            } catch (HeadlessException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al eliminar usuario.");
+        try {
+            // Obtener lista de usuarios
+            List<Usuario> usuarios = usuarioController.findAll();
+            if (usuarios.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay usuarios registrados.");
+                return;
             }
+
+            JComboBox<String> comboUsuarios = new JComboBox<>();
+            Map<String, Usuario> mapaUsuarios = new HashMap<>();
+            for (Usuario u : usuarios) {
+                String key = "(" + u.getCodUsuario() + ") - " + u.getNombreUsuario();
+                comboUsuarios.addItem(key);
+                mapaUsuarios.put(key, u);
+            }
+
+            int opcion = JOptionPane.showConfirmDialog(this, comboUsuarios,
+                    "Selecciona el usuario a borrar", JOptionPane.OK_CANCEL_OPTION);
+            if (opcion != JOptionPane.OK_OPTION) {
+                return;
+            }
+
+            Usuario seleccionado = mapaUsuarios.get(comboUsuarios.getSelectedItem());
+
+            // Refrescar desde la BBDD para evitar efectos de caché
+            Usuario actualizado = usuarioController.findById(seleccionado.getCodUsuario());
+
+            if (actualizado == null) {
+                JOptionPane.showMessageDialog(this, "El usuario ya no existe en la base de datos.");
+                return;
+            }
+
+            if (!actualizado.getVentaCollection().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No se puede borrar el usuario. Tiene ventas registradas.",
+                        "Integridad referencial",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            usuarioController.delete(actualizado.getCodUsuario());
+            JOptionPane.showMessageDialog(this, "Usuario eliminado correctamente.");
+            cargarUsuariosEnTabla();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al borrar el usuario: " + e.getMessage());
+
         }
-
-
     }//GEN-LAST:event_BorrarUsuarioActionPerformed
 
     private void ActualizarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActualizarUsuarioActionPerformed

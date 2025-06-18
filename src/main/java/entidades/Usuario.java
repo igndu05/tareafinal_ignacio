@@ -134,11 +134,13 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        String tmp = "";
-        for (Venta v : ventaCollection) {
-            tmp += v + "\n";
-        }
-        return "Usuario{" + "codUsuario=" + codUsuario + ", nombreUsuario=" + nombreUsuario + ", dniUsuario=" + dniUsuario + ", localidadUsuario=" + localidadUsuario + ", telefUsuario=" + telefUsuario + ", ventaCollection=" + ventaCollection + '}';
+        return "Usuario{"
+                + "codUsuario=" + codUsuario
+                + ", nombreUsuario='" + nombreUsuario + '\''
+                + ", dniUsuario='" + dniUsuario + '\''
+                + ", localidadUsuario='" + localidadUsuario + '\''
+                + ", telefUsuario='" + telefUsuario + '\''
+                + '}';
     }
 
     public void setVentaCollection(Collection<Venta> ventaCollection) {
