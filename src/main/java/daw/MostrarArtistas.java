@@ -207,7 +207,8 @@ public class MostrarArtistas extends javax.swing.JFrame {
                 SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
                 formato.setLenient(false); // Evita entradas inválidas como "2025-13-32"
                 Date fecha = formato.parse(nuevaFechaStr);
-
+                
+                artista.setNomArtista(nuevoNombre);
                 artista.setFechaNacimientoArtista(fecha);
                 artistaController.update(artista);
                 cargarArtistasEnTabla();

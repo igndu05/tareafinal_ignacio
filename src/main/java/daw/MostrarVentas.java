@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -149,43 +150,56 @@ public class MostrarVentas extends javax.swing.JFrame {
             }
             Usuario usuarioSeleccionado = mapaUsuarios.get(comboUsuarios.getSelectedItem());
 
-            // Obtener lista de discos
-            List<Disco> discos = discoController.findAll();
-            if (discos.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "No hay discos registrados.");
-                return;
-            }
-
-            JComboBox<String> comboDiscos = new JComboBox<>();
-            Map<String, Disco> mapaDiscos = new HashMap<>();
-            for (Disco disco : discos) {
-                String opcion = "(" + disco.getCodDisco() + ") - " + disco.getNomDisco();
-                comboDiscos.addItem(opcion);
-                mapaDiscos.put(opcion, disco);
-            }
-
-            int opcionDisco = JOptionPane.showConfirmDialog(this, comboDiscos, "Selecciona un disco", JOptionPane.OK_CANCEL_OPTION);
-            if (opcionDisco != JOptionPane.OK_OPTION) {
-                return;
-            }
-            Disco discoSeleccionado = mapaDiscos.get(comboDiscos.getSelectedItem());
-
             // Crear la venta
             Venta venta = new Venta();
             venta.setFechaVenta(new Date());
 
-            // Solo pasamos el ID del usuario, y dejamos que VentaController lo sincronice
             Usuario usuarioTemporal = new Usuario();
             usuarioTemporal.setCodUsuario(usuarioSeleccionado.getCodUsuario());
             venta.setUsuario(usuarioTemporal);
 
-            DetalleVenta detalle = new DetalleVenta();
-            detalle.setDisco(discoSeleccionado);
-            venta.addDetalleVenta(detalle); // También hace setVenta()
+            boolean agregarOtro = true;
 
-            // El create() se encarga de em.find(usuario) para evitar duplicados
+            while (agregarOtro) {
+                List<Disco> discos = discoController.findAll();
+                if (discos.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "No hay discos registrados.");
+                    return;
+                }
+
+                JComboBox<String> comboDiscos = new JComboBox<>();
+                Map<String, Disco> mapaDiscos = new HashMap<>();
+                for (Disco disco : discos) {
+                    String opcion = "(" + disco.getCodDisco() + ") - " + disco.getNomDisco();
+                    comboDiscos.addItem(opcion);
+                    mapaDiscos.put(opcion, disco);
+                }
+
+                int opcionDisco = JOptionPane.showConfirmDialog(this, comboDiscos, "Selecciona un disco", JOptionPane.OK_CANCEL_OPTION);
+                if (opcionDisco != JOptionPane.OK_OPTION) {
+                    break;
+                }
+
+                Disco discoSeleccionado = mapaDiscos.get(comboDiscos.getSelectedItem());
+
+                DetalleVenta detalle = new DetalleVenta();
+                detalle.setDisco(discoSeleccionado);
+                venta.addDetalleVenta(detalle);
+
+                int continuar = JOptionPane.showConfirmDialog(this,
+                        "¿Quieres añadir otro disco a esta venta?",
+                        "Agregar más discos",
+                        JOptionPane.YES_NO_OPTION);
+
+                agregarOtro = (continuar == JOptionPane.YES_OPTION);
+            }
+
+            if (venta.getDetalleVentaCollection().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No se puede crear una venta sin al menos un disco.");
+                return;
+            }
+
             ventaController.create(venta);
-
             JOptionPane.showMessageDialog(this, "Venta creada correctamente.");
             cargarVentasEnTabla();
 
@@ -334,13 +348,18 @@ public class MostrarVentas extends javax.swing.JFrame {
         List<Venta> ventas = ventaController.findAll();
 
         DefaultTableModel modelo = new DefaultTableModel();
-        modelo.setColumnIdentifiers(new String[]{"ID", "Usuario", "Fecha"});
+        modelo.setColumnIdentifiers(new String[]{"ID", "Usuario", "Fecha", "Discos vendidos"});
 
         for (Venta venta : ventas) {
+            String discos = venta.getDetalleVentaCollection().stream()
+                    .map(detalle -> detalle.getDisco().getNomDisco())
+                    .collect(Collectors.joining(", "));
+
             modelo.addRow(new Object[]{
                 venta.getCodVenta(),
                 venta.getUsuario().getNombreUsuario(),
-                new SimpleDateFormat("dd/MM/yyyy").format(venta.getFechaVenta())
+                new SimpleDateFormat("dd/MM/yyyy").format(venta.getFechaVenta()),
+                discos
             });
         }
 
